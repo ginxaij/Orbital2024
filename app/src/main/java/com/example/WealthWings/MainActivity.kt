@@ -25,6 +25,7 @@ import com.example.WealthWings.pages.Transaction
 import com.example.WealthWings.ui.theme.GoodMoneyTheme
 import com.example.goodmoney.R
 
+// Test commit
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
