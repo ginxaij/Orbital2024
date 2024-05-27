@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.goodmoney"
+    namespace = "com.example.wealthwings"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.goodmoney"
+        applicationId = "com.example.wealthwings"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -17,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.wealthwings.components.TableRow
 import com.example.wealthwings.ui.theme.Background
 import com.example.wealthwings.ui.theme.BackgroundElevated
-import com.example.wealthwings.ui.theme.Shapes
+import com.example.wealthwings.components.TableRow
 import com.example.wealthwings.ui.theme.Divider
-//import com.example.wealthwings.ui.theme.TopAppBarBackGround
+import com.example.wealthwings.ui.theme.Shapes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

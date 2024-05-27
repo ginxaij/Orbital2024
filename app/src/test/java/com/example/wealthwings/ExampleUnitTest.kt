@@ -1,4 +1,4 @@
-package com.example.WealthWings
+package com.example.wealthwings
 
 import org.junit.Test
 
