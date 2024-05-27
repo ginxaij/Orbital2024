@@ -1,5 +1,6 @@
 package com.example.wealthwings.pages
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,27 +20,27 @@ import com.example.wealthwings.ui.theme.BackgroundElevated
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Transaction(navController: NavController, name: String) {
+fun Investment(navController: NavController, name: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Expenses") }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+                title = { Text("Investment") }, colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Background
                 )
             )
         },
         floatingActionButton = {
-                   LargeButton(navController)
+            LargeButton(navController)
         }
 
         ,
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                Text(text = "hi expenses")
+                Text(text = "hi Investments")
 
-                }
+            }
 
-            })
+        })
 
 
 }
