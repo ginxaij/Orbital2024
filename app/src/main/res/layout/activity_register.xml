@@ -7,16 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".Register"
     android:orientation="vertical"
+    android:background="@color/light_black"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="20dp"
         android:text="WealthWings Logo"
         android:textAlignment="center"
         android:textSize="30sp"
+        android:textColor="@color/white"
         android:textStyle="bold"/>
 
     <TextView
@@ -25,39 +28,56 @@
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
         android:text="Welcome! Sign Up to continue"
         android:textAlignment="center"
         android:textSize="30sp"
+        android:textColor="@color/white"
         android:textStyle="bold"/>
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/et_email"
-        android:layout_margin="20dp"
-        android:hint="Enter email" />
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="50dp"
+        android:textAlignment="center"
+        android:textColorHint="@color/white"
+        android:background="@drawable/rounded_edittext"
+        android:backgroundTint="@color/grey"
+        android:hint="Enter Email" />
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/et_password"
-        android:layout_margin="20dp"
-        android:hint="Enter password" />
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="40dp"
+        android:textColorHint="@color/white"
+        android:background="@drawable/rounded_edittext"
+        android:backgroundTint="@color/grey"
+        android:textAlignment="center"
+        android:hint="Enter Password" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/re_et_password"
-        android:layout_margin="20dp"
-        android:hint="Re-enter password"/>
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:textColorHint="@color/white"
+        android:background="@drawable/rounded_edittext"
+        android:backgroundTint="@color/grey"
+        android:textAlignment="center"
+        android:hint="Re-Enter Password" />
 
     <Button
         android:id="@+id/btn_signUp"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Sign Up"
-        android:backgroundTint="@color/black"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
         android:layout_gravity="center">
     </Button>
 
@@ -67,6 +87,7 @@
         android:text="Already registered? Sign in"
         android:layout_margin="20dp"
         android:layout_gravity="center"
+        android:textColor="@color/white"
         android:id="@+id/alreadyReg"/>
 
 </LinearLayout>
