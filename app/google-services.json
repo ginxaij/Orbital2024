@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "86792639817",
+    "project_id": "wealthwings-dca6b",
+    "storage_bucket": "wealthwings-dca6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86792639817:android:fa4a54de660d264cdbb698",
+        "android_client_info": {
+          "package_name": "com.example.wealthwings"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW9F1TMeOHE0sDEYtKNyWex3meWw7unzQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
