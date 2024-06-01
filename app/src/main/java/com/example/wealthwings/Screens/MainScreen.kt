@@ -1,5 +1,7 @@
 package com.example.wealthwings.Screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -12,27 +14,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.wealthwings.R
 import com.example.wealthwings.pages.Add
 import com.example.wealthwings.pages.FAQ
 import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
 import com.example.wealthwings.pages.Profile
 import com.example.wealthwings.pages.Quiz
-import com.example.wealthwings.R
 import com.example.wealthwings.pages.Transaction
 import com.example.wealthwings.ui.theme.BottomBar
+import com.example.wealthwings.viewmodels.ExpenseViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen() {
     val navController =
         rememberNavController() //this is to create an instance to manage app navigation within NavHost
     val backStackEntry =
         navController.currentBackStackEntryAsState() //keep track of current route and its state,
-    // to update the UI based on its state
+    // to update the UI based on its stat
     Scaffold(
         bottomBar = {
             NavigationBar(containerColor = BottomBar) {
@@ -122,8 +127,8 @@ fun MainScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                    ) {
-                        Transaction(navController, "Transaction")
+                    ) { val viewModel: ExpenseViewModel = viewModel()
+                        Transaction(navController, viewModel = viewModel)
                     }
                 }
                 composable("investment") {
@@ -179,8 +184,8 @@ fun MainScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                    ) {
-                        Add(navController)
+                    ) { val viewModel: ExpenseViewModel = viewModel()
+                        Add(navController, viewModel)
                     }
                 }
             }
