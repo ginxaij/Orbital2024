@@ -1,11 +1,19 @@
 package com.example.wealthwings.model
 
-import java.time.LocalDate
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class Expense(
-    val id: String, // Unique identifier for the expense
-    val amount: Double,
-    val category: String,
-    val date: LocalDate,
+@RequiresApi(Build.VERSION_CODES.O)
+
+@Entity
+data class Expense @RequiresApi(Build.VERSION_CODES.O) constructor(
+    @PrimaryKey()
+    val id: String = "", // Unique identifier for the expense
+    val amount: Double = 0.0,
+    val category: String = "",
+    val date: String = "",
     val note: String? = null
 )
+

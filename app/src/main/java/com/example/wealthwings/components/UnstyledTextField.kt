@@ -35,7 +35,7 @@ fun UnstyledTextField(
     textStyle: TextStyle = LocalTextStyle.current,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
-    arrangement: Arrangement.Horizontal = Arrangement.Start,
+    arrangement: Arrangement.Horizontal = Arrangement.End,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,

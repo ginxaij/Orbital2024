@@ -1,47 +1,69 @@
 package com.example.wealthwings
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
-import com.example.wealthwings.Screens.LoginScreen
 import com.example.wealthwings.Screens.MainScreen
-import com.example.wealthwings.Screens.RegisterScreen
-import com.example.wealthwings.Screens.Screen
 import com.example.wealthwings.ui.theme.WealthWingsTheme
+import com.example.wealthwings.viewmodels.ExpenseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.threetenabp.AndroidThreeTen
 
+
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var navController: NavController
+    //private lateinit var navController: NavController
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidThreeTen.init(this)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
         auth = FirebaseAuth.getInstance()
 
         setContent {
             WealthWingsTheme {
-                navController = rememberNavController()  // Use the class level navController
-                NavHost(
-                    navController = navController as NavHostController,
-                    startDestination = Screen.Login.route
-                ) {
-                    composable(Screen.Login.route) { LoginScreen(navController) }
-                    composable(Screen.Register.route) { RegisterScreen(navController) }
-                    composable(Screen.Main.route) { MainScreen() }
-                }
+                val viewModel = ViewModelProvider(this).get(ExpenseViewModel::class.java)
+                val navController = rememberNavController()  // Use the class level navController
+                MainScreen(navController, viewModel)
             }
         }
     }
 }
+
+
+//class MainActivity : ComponentActivity() {
+//    private lateinit var auth: FirebaseAuth
+//    private lateinit var navController: NavController
+//
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        AndroidThreeTen.init(this)
+//        enableEdgeToEdge()
+//        super.onCreate(savedInstanceState)
+//        auth = FirebaseAuth.getInstance()
+//
+//        setContent {
+//            WealthWingsTheme {
+//                navController = rememberNavController()  // Use the class level navController
+//                NavHost(
+//                    navController = navController as NavHostController,
+//                    startDestination = Screen.Login.route
+//                ) {
+//                    composable(Screen.Login.route) { LoginScreen(navController) }
+//                    composable(Screen.Register.route) { RegisterScreen(navController) }
+//                    composable(Screen.Main.route) { MainScreen() }
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 //    override fun onStart() {
