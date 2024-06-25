@@ -13,11 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.wealthwings.components.LargeButton
 import com.example.wealthwings.ui.theme.Background
-import com.example.wealthwings.ui.theme.BackgroundElevated
-
-//import com.example.wealthwings.ui.theme.TopAppBarBackGround
 
 
 @OptIn(ExperimentalMaterial3Api::class)
