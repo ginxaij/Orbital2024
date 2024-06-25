@@ -1,7 +1,9 @@
 package com.example.wealthwings.pages
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
@@ -9,6 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wealthwings.components.LargeButton
 import com.example.wealthwings.ui.theme.Background
@@ -28,18 +31,28 @@ fun Quiz(navController: NavController, name: String) {
                 )
             )
         },
-        floatingActionButton = {
-            LargeButton(navController)
-        }
 
-        ,
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                Text(text = "hi Quiz")
 
+                Button(onClick = {navController.navigate("quiz/CPF") },
+                    modifier = Modifier.fillMaxWidth().padding(20.dp)
+                ) {
+                    Text(text = "CPF")
+                }
+
+                Button(onClick = {navController.navigate("quiz/TVM")},
+                    modifier = Modifier.fillMaxWidth().padding(20.dp)
+                ) {
+                    Text(text = "Time Value of Money")
+                }
+
+                Button(onClick = {navController.navigate("quiz/stock") },
+                    modifier = Modifier.fillMaxWidth().padding(20.dp)
+                ) {
+                    Text(text = "Stock Market")
+                }
             }
 
         })
-
-
 }

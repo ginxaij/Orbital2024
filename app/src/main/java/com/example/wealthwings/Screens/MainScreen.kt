@@ -25,6 +25,7 @@ import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
 import com.example.wealthwings.pages.Profile
 import com.example.wealthwings.pages.Quiz
+import com.example.wealthwings.pages.QuizGamePage
 import com.example.wealthwings.pages.Transaction
 import com.example.wealthwings.ui.theme.BottomBar
 import com.example.wealthwings.viewmodels.ExpenseViewModel
@@ -148,6 +149,37 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
                         Quiz(navController, "Quiz")
                     }
                 }
+
+                composable("quiz/CPF") {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) {
+                        QuizGamePage(navController, "CPF")
+                    }
+                }
+
+                composable("quiz/TVM") {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) {
+                        QuizGamePage(navController, "TVM")
+                    }
+                }
+
+                composable("quiz/stock") {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) {
+                        QuizGamePage(navController, "stock")
+                    }
+                }
+
                 composable("more") {
                     Surface(
                         modifier = Modifier

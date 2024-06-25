@@ -54,9 +54,8 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var category by remember { mutableStateOf("Select") }
     val categories = listOf(
-        "Food & Dining", "Transportation", "Utilities", "Rent", "Entertainment",
-        "Groceries", "Health & Fitness", "Insurance", "Education", "Personal Care",
-        "Shopping", "Travel", "Miscellaneous")
+        "Food & Dining", "Transportation", "Utilities",
+        "Groceries", "Miscellaneous")
 
     Scaffold(
         topBar = {
@@ -123,7 +122,13 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                     TableRow(label = "Note", detail = {
                         UnstyledTextField(
                             value = note,
-                            onValueChange = { note = it },
+                            onValueChange = { newValue ->
+                                if (newValue.length <= 25) {
+                                    note = newValue
+                                } else {
+                                    note = newValue.take(25)
+                                }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             placeholder = { Text("0") },
                             arrangement = Arrangement.End,
