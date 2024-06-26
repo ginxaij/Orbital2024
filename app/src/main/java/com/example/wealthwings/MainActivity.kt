@@ -1,5 +1,6 @@
 package com.example.wealthwings
 
+//import com.example.wealthwings.viewmodels.StockSearchViewModel
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,8 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.Screens.MainScreen
 import com.example.wealthwings.ui.theme.WealthWingsTheme
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.example.wealthwings.viewmodels.StockHoldingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.threetenabp.AndroidThreeTen
+
 
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +34,14 @@ class MainActivity : ComponentActivity() {
             WealthWingsTheme {
                 val viewModel = ViewModelProvider(this).get(ExpenseViewModel::class.java)
                 val navController = rememberNavController()  // Use the class level navController
-                MainScreen(navController, viewModel)
+                val sviewModel = ViewModelProvider(this).get(StockHoldingViewModel::class.java)
+//                val searchViewModel = ViewModelProvider(this).get(StockSearchViewModel::class.java)
+                MainScreen(navController, viewModel, sviewModel) //searchViewModel)
+//                val viewModel: ExpenseViewModel by viewModels()
+//                val sviewModel: StockHoldingViewModel by viewModels()
+//                val searchViewModel: StockSearchViewModel by viewModels()
+//                val navController = rememberNavController()
+                MainScreen(navController, viewModel, sviewModel)
             }
         }
     }

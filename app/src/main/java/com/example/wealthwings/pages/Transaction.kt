@@ -49,7 +49,7 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
         },
 
         floatingActionButton = {
-            LargeButton(navController)
+            LargeButton(navController, "transaction/add")
         },
         content = { innerPadding ->
 

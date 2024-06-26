@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wealthwings.R
 import com.example.wealthwings.pages.Add
+import com.example.wealthwings.pages.AddStockHolding
 import com.example.wealthwings.pages.FAQ
 import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
@@ -29,11 +30,12 @@ import com.example.wealthwings.pages.QuizGamePage
 import com.example.wealthwings.pages.Transaction
 import com.example.wealthwings.ui.theme.BottomBar
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.example.wealthwings.viewmodels.StockHoldingViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
+fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel, sviewModel: StockHoldingViewModel) {//, searchViewModel: StockSearchViewModel) {
 //    val navController =
 //        rememberNavController() //this is to create an instance to manage app navigation within NavHost
     val backStackEntry =
@@ -64,7 +66,8 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
                 )
 
                 NavigationBarItem(
-                    selected = backStackEntry.value?.destination?.route == "investment",
+                    selected = backStackEntry.value?.destination?.route?.startsWith(
+                        "investment") ?: false,
                     onClick = { navController.navigate("investment") },
                     label = {
                         Text(
@@ -128,7 +131,7 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
                             .fillMaxSize()
                             .padding(innerPadding),
                     ) { //val viewModel: ExpenseViewModel = viewModel()
-                        Transaction(navController, viewModel = viewModel)
+                        Transaction(navController, viewModel)
                     }
                 }
                 composable("investment") {
@@ -137,7 +140,7 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
                             .fillMaxSize()
                             .padding(innerPadding),
                     ) {
-                        Investment(navController,"Investment")
+                        Investment(navController, sviewModel)
                     }
                 }
                 composable("quiz") {
@@ -219,9 +222,18 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel) {
                         Add(navController, viewModel)
                     }
                 }
+                composable("investment/addstockholding") {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                    ) { //val viewModel: ExpenseViewModel = viewModel()
+                        AddStockHolding(navController, sviewModel)
+                    }
+                }
                 composable(Screen.Login.route) { LoginScreen(navController) }
                 composable(Screen.Register.route) { RegisterScreen(navController) }
-                composable(Screen.Main.route) { MainScreen(navController, viewModel) }
+                composable(Screen.Main.route) { MainScreen(navController, viewModel, sviewModel) }
             }
         }
     )

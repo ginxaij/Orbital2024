@@ -13,7 +13,7 @@ abstract class ExpenseDatabase : RoomDatabase() {
     abstract fun getExpenseDao(): ExpenseDao
 
     companion object {
-        const val NAME = "ExpenseDB"
+        const val NAME = "ExpenseDatabase"
         @Volatile private var instance: ExpenseDatabase? = null
 
         fun getInstance(context: Context): ExpenseDatabase =
