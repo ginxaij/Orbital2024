@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 
-
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     //private lateinit var navController: NavController
@@ -41,7 +40,6 @@ class MainActivity : ComponentActivity() {
 //                val sviewModel: StockHoldingViewModel by viewModels()
 //                val searchViewModel: StockSearchViewModel by viewModels()
 //                val navController = rememberNavController()
-                MainScreen(navController, viewModel, sviewModel)
             }
         }
     }

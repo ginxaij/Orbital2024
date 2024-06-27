@@ -4,7 +4,6 @@ import android.app.Application
 import com.example.wealthwings.db.ExpenseDatabase
 import com.example.wealthwings.db.StockHoldingDatabase
 
-//@HiltAndroidApp
 class MainApplication : Application() {
 
     override fun onCreate() {

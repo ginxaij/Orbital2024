@@ -23,5 +23,8 @@ interface StockHoldingDao {
 
     @Query("UPDATE stockholding SET quantity = quantity + :quantity WHERE name = :name")
     fun updateQuantity(name: String, quantity: Int)
+
+    @Query("DELETE FROM stockholding")
+    fun deleteAllHoldings()
 }
 

@@ -29,44 +29,6 @@ import androidx.navigation.NavController
 import com.example.wealthwings.ui.theme.Background
 import com.example.wealthwings.ui.theme.Primary
 
-//@Composable
-//fun LoginScreen(navController: NavController) {
-//    var email by rememberSaveable { mutableStateOf("") }
-//    var password by rememberSaveable { mutableStateOf("") }
-//    var loginError by remember { mutableStateOf("") }
-//
-//    Column(modifier = Modifier.padding(16.dp)) {
-//        TextField(
-//            value = email,
-//            onValueChange = { email = it },
-//            label = { Text("Email") }
-//        )
-//        TextField(
-//            value = password,
-//            onValueChange = { password = it },
-//            label = { Text("Password") },
-//            visualTransformation = PasswordVisualTransformation()
-//        )
-//        Button(onClick = {
-//            UserService.loginUser(email, password, onSuccess = {
-//                navController.navigate(Screen.Main.route) {
-//                    popUpTo(Screen.Login.route) { inclusive = true }
-//                }
-//            }, onError = {
-//                loginError = it
-//            })
-//        }) {
-//            Text("Login")
-//        }
-//        Spacer(Modifier.height(8.dp))
-//        Button(onClick = { navController.navigate(Screen.Register.route) }) {
-//            Text("No account? Register here")
-//        }
-//        if (loginError.isNotEmpty()) {
-//            Text("Error: $loginError", color = Color.Red)
-//        }
-//    }
-//}
 
 @Composable
 fun LoginScreen(navController: NavController) {

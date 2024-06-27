@@ -189,7 +189,7 @@ fun MainScreen(navController: NavHostController, viewModel: ExpenseViewModel, sv
                             .fillMaxSize()
                             .padding(innerPadding),
                     ) {
-                        More(navController)
+                        More(navController, viewModel, sviewModel)
                     }
                 }
 

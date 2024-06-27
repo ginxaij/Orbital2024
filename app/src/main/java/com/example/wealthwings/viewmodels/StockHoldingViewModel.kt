@@ -36,6 +36,7 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+
 //    fun addHolding(stockHolding: StockHolding) {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            stockHoldingDao.addHolding(stockHolding)
@@ -47,4 +48,11 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
             stockHoldingDao.deleteHolding(id)
         }
     }
+
+    fun deleteAllHoldings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            stockHoldingDao.deleteAllHoldings()
+        }
+    }
+
 }
