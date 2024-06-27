@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.Screens.MainScreen
 import com.example.wealthwings.ui.theme.WealthWingsTheme
@@ -19,7 +19,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
-    //private lateinit var navController: NavController
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,15 +30,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WealthWingsTheme {
-                val viewModel = ViewModelProvider(this).get(ExpenseViewModel::class.java)
-                val navController = rememberNavController()  // Use the class level navController
-                val sviewModel = ViewModelProvider(this).get(StockHoldingViewModel::class.java)
-//                val searchViewModel = ViewModelProvider(this).get(StockSearchViewModel::class.java)
-                MainScreen(navController, viewModel, sviewModel) //searchViewModel)
-//                val viewModel: ExpenseViewModel by viewModels()
-//                val sviewModel: StockHoldingViewModel by viewModels()
-//                val searchViewModel: StockSearchViewModel by viewModels()
-//                val navController = rememberNavController()
+                val navController = rememberNavController()
+                val expenseViewModel: ExpenseViewModel = viewModel()
+                val stockHoldingViewModel: StockHoldingViewModel = viewModel()
+//                val showBottomBar = remember { mutableStateOf(true) }
+
+                MainScreen(navController, expenseViewModel, stockHoldingViewModel)
             }
         }
     }
