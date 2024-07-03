@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.R
 import com.example.wealthwings.pages.Add
 import com.example.wealthwings.pages.AddStockHolding
@@ -33,13 +34,16 @@ import com.example.wealthwings.viewmodels.StockHoldingViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(navController: NavHostController, expenseViewModel: ExpenseViewModel, stockHoldingViewModel: StockHoldingViewModel) {//, searchViewModel: StockSearchViewModel) {
+fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewModel, stockHoldingViewModel: StockHoldingViewModel) {//, searchViewModel: StockSearchViewModel) {
 //    val navController =
 //        rememberNavController() //this is to create an instance to manage app navigation within NavHost
+
+    val navController = rememberNavController()
     val backStackEntry =
         navController.currentBackStackEntryAsState() //keep track of current route and its state,
     // to update the UI based on its state
     val showBottomBar = remember { mutableStateOf(true) }
+
 
     Scaffold(
         bottomBar = {

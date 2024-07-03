@@ -7,42 +7,91 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.wealthwings.db.ExpenseDao
-import com.example.wealthwings.db.ExpenseDatabase
+import com.example.wealthwings.db.loadExpenses
+import com.example.wealthwings.db.removeAllExpense
+import com.example.wealthwings.db.removeExpense
+import com.example.wealthwings.db.writeExpense
 import com.example.wealthwings.model.Expense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
+    private var currentUserUid: String? = null
+    var expensesLiveData = getExpenses()
 
-    private val expenseDao: ExpenseDao = ExpenseDatabase.getInstance(application).getExpenseDao()
-    val expenses: LiveData<List<Expense>> = expenseDao.getAllExpenses()
     private val _totalAmount = MediatorLiveData<Double>().apply {
-        addSource(expenses) { expenseList ->
+        addSource(expensesLiveData) { expenseList ->
             value = expenseList.sumOf { it.amount }
         }
     }
     val totalAmount: LiveData<Double> get() = _totalAmount
 
-    fun addExpense(expense: Expense) {
-        viewModelScope.launch(Dispatchers.IO) {
-            expenseDao.addExpense(expense)
+    fun setCurrentUser(input: String?) {
+        currentUserUid = input
+        // Reload expenses for the current user
+        expensesLiveData = getExpenses()
+        _totalAmount.removeSource(expensesLiveData)
+        _totalAmount.addSource(expensesLiveData) { expenses ->
+            _totalAmount.value = expenses.sumOf { it.amount }
         }
     }
 
-    fun deleteExpense(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            expenseDao.deleteExpense(id)
+    fun getExpenses(): LiveData<List<Expense>> {
+        return loadExpenses(currentUserUid.toString())
+    }
+
+    fun addExpense(expense: Expense) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                writeExpense(currentUserUid.toString(), expense)
+            }
+        }
+    }
+
+    fun deleteExpense(expenseUID: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                removeExpense(currentUserUid.toString(), expenseUID)
+            }
         }
     }
 
     fun deleteAllExpenses() {
-        viewModelScope.launch(Dispatchers.IO) {
-            expenseDao.deleteAllExpenses()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                removeAllExpense(currentUserUid.toString())
+            }
         }
     }
 }
+//    private val expenseDao: ExpenseDao = ExpenseDatabase.getInstance(application).getExpenseDao()
+//    val expenses: LiveData<List<Expense>> = expenseDao.getAllExpenses()
+//    private val _totalAmount = MediatorLiveData<Double>().apply {
+//        addSource(expenses) { expenseList ->
+//            value = expenseList.sumOf { it.amount }
+//        }
+//    }
+//    val totalAmount: LiveData<Double> get() = _totalAmount
+//
+//    fun addExpense(expense: Expense) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            expenseDao.addExpense(expense)
+//        }
+//    }
+//
+//    fun deleteExpense(id: Int) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            expenseDao.deleteExpense(id)
+//        }
+//    }
+//
+//    fun deleteAllExpenses() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            expenseDao.deleteAllExpenses()
+//        }
+//    }
 
 
 

@@ -15,14 +15,16 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class StockHoldingViewModel(application: Application) : AndroidViewModel(application) {
-    private val stockHoldingDao: StockHoldingDao = StockHoldingDatabase.getInstance(application).getStockHoldingDao()
+    private val stockHoldingDao: StockHoldingDao =
+        StockHoldingDatabase.getInstance(application).getStockHoldingDao()
 
-    val stockHolding: LiveData<List<StockHolding>> = stockHoldingDao.getAllHoldings()
+    var stockHolding: LiveData<List<StockHolding>> = stockHoldingDao.getAllHoldings()
     private val _totalAmount = MediatorLiveData<Double>().apply {
         addSource(stockHolding) { stockHoldingList ->
             value = stockHoldingList.sumOf { it.price * it.quantity }
         }
     }
+
     val totalAmount: LiveData<Double> get() = _totalAmount
 
     fun addHolding(stockHolding: StockHolding) {
@@ -35,6 +37,11 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
+
+//    fun getHoldings(): LiveData<List<StockHolding>> {
+//        return readHoldings(currentUserUid.toString())
+//    }
+
 
 
 //    fun addHolding(stockHolding: StockHolding) {

@@ -177,7 +177,6 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                     onClick = {
                         if (amount.isNotBlank() && category.isNotBlank() && date.isNotBlank()) {
                             val expense = Expense(
-                                //UUID(),
                                 amount = amount.toDouble(),
                                 category = category,
                                 date = date,

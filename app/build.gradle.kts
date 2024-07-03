@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.runtime.android)
+    implementation(libs.firebase.database)
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation(libs.androidx.core.ktx)
@@ -80,7 +81,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     val room_version = "2.6.1"
-
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation("com.google.firebase:firebase-database")
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")

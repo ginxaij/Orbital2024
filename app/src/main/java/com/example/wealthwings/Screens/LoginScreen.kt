@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wealthwings.ui.theme.Background
 import com.example.wealthwings.ui.theme.Primary
+import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.example.wealthwings.viewmodels.StockHoldingViewModel
 
 
 @Composable

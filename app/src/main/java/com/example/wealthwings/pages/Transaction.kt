@@ -1,6 +1,8 @@
 package com.example.wealthwings.pages
 
+import android.content.ContentValues.TAG
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,19 +40,25 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wealthwings.components.LargeButton
 import com.example.wealthwings.model.Expense
+import com.example.wealthwings.model.User
 import com.example.wealthwings.ui.theme.Background
 import com.example.wealthwings.ui.theme.BackgroundElevated
 import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
-    val expenses by viewModel.expenses.observeAsState(emptyList())
+    val expenses by viewModel.expensesLiveData.observeAsState(emptyList())
     val totalAmount by viewModel.totalAmount.observeAsState(0.0)
     var showDialog by remember { mutableStateOf(false) }
     var selectedExpense by remember { mutableStateOf<Expense?>(null) }
-
 
     Scaffold(
         topBar = {
@@ -65,7 +73,6 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
             LargeButton(navController, "transaction/add")
         },
         content = { innerPadding ->
-
             Spacer(modifier = Modifier.padding(10.dp))
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 item {
@@ -195,6 +202,7 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
             }
         )
     }
+    // THIS IS THE END
 }
 
 //@RequiresApi(Build.VERSION_CODES.O)

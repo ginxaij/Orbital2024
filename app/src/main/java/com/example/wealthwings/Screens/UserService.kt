@@ -1,5 +1,6 @@
 package com.example.wealthwings.Screens
 
+import com.example.wealthwings.db.writeNewUser
 import com.google.firebase.auth.FirebaseAuth
 
 object UserService {
@@ -18,6 +19,7 @@ object UserService {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    writeNewUser(FirebaseAuth.getInstance().currentUser!!.uid, password, email)
                     onSuccess()
                 } else {
                     onError(task.exception?.message ?: "An unknown error occurred")
