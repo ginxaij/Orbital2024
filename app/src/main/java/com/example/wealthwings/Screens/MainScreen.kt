@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.R
 import com.example.wealthwings.pages.Add
 import com.example.wealthwings.pages.AddStockHolding
+import com.example.wealthwings.pages.EditDate
 import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
 import com.example.wealthwings.pages.Quiz
@@ -148,6 +149,12 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
                 showBottomBar.value = true
                 Add(navController, expenseViewModel)
             }
+
+            composable("transaction/editdate") {
+                showBottomBar.value = true
+                EditDate(navController, expenseViewModel)
+            }
+
             composable("investment/addstockholding") {
                 showBottomBar.value = true
                 AddStockHolding(navController, stockHoldingViewModel)

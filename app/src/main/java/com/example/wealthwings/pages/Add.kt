@@ -42,6 +42,7 @@ import com.example.wealthwings.ui.theme.Divider
 import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.ui.theme.TextPrimary
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,14 +77,6 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                         .background(BackgroundElevated)
                         .fillMaxWidth()
                 ) {
-//                    OutlinedTextField(
-//                        value = amount,
-//                        onValueChange = { amount = it },
-//                        label = { Text("Amount") },
-//                        singleLine = true,
-//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
 
                     TableRow(label = "Amount", detail = {
                         UnstyledTextField(
@@ -163,16 +156,6 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                     })
                 }
 
-//                    Divider(thickness = 1.dp, color = Divider)
-//                    TableRow(
-//                        "Note"
-//                    )
-//                    Divider(thickness = 1.dp, color = Divider)
-//                    TableRow(
-//                        "Category"
-//                    )
-//                    Divider(thickness = 1.dp, color = Divider)
-
                 Button(
                     onClick = {
                         if (amount.isNotBlank() && category.isNotBlank() && date.isNotBlank()) {
@@ -195,17 +178,6 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                     Text(text = "Submit Expenses")
                 }
             }
-
         }
     )
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-//@Composable
-//fun PreviewAdd() {
-//    WealthWingsTheme {
-//        val navController = rememberNavController()
-//        Add(navController = navController, viewModel = ExpenseViewModel())
-//    }
-//}

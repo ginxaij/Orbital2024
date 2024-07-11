@@ -2,10 +2,12 @@ package com.example.wealthwings.viewmodels
 
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.wealthwings.db.loadExpenses
 import com.example.wealthwings.db.removeAllExpense
@@ -15,11 +17,26 @@ import com.example.wealthwings.model.Expense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.Period
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     private var currentUserUid: String? = null
-    var expensesLiveData = getExpenses()
+
+    private val _startDate = MutableLiveData<LocalDate?>()
+    val startDate: LiveData<LocalDate?> get() = _startDate
+
+    private val _endDate = MutableLiveData<LocalDate?>()
+    val endDate: LiveData<LocalDate?> get() = _endDate
+
+//    private var _startDate: MutableLiveData<LocalDate?>()
+//    val startDate: LiveData<LocalDate?>? get() = _startDate
+//
+//    private var _endDate: MutableLiveData<LocalDate?>()
+//    val endDate: LiveData<LocalDate?>? get() = _endDate
+
+    var expensesLiveData = getExpenses(startDate?.value, endDate?.value)
 
     private val _totalAmount = MediatorLiveData<Double>().apply {
         addSource(expensesLiveData) { expenseList ->
@@ -28,18 +45,29 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     }
     val totalAmount: LiveData<Double> get() = _totalAmount
 
-    fun setCurrentUser(input: String?) {
-        currentUserUid = input
-        // Reload expenses for the current user
-        expensesLiveData = getExpenses()
+    fun setStartAndEndDate(startDateIn: LocalDate?, endDateIn: LocalDate?) {
+        _startDate?.value = startDateIn // Set new startDate value
+        _endDate?.value = endDateIn // Set new endDate value
+
+        expensesLiveData = getExpenses(startDateIn, endDateIn)
         _totalAmount.removeSource(expensesLiveData)
         _totalAmount.addSource(expensesLiveData) { expenses ->
             _totalAmount.value = expenses.sumOf { it.amount }
         }
     }
 
-    fun getExpenses(): LiveData<List<Expense>> {
-        return loadExpenses(currentUserUid.toString())
+    fun setCurrentUser(input: String?) {
+        currentUserUid = input
+        // Reload expenses for the current user
+        expensesLiveData = getExpenses(startDate?.value, endDate?.value)
+        _totalAmount.removeSource(expensesLiveData)
+        _totalAmount.addSource(expensesLiveData) { expenses ->
+            _totalAmount.value = expenses.sumOf { it.amount }
+        }
+    }
+
+    fun getExpenses(startDate: LocalDate?, endDate: LocalDate?): LiveData<List<Expense>> {
+        return loadExpenses(currentUserUid.toString(), startDate, endDate)
     }
 
     fun addExpense(expense: Expense) {

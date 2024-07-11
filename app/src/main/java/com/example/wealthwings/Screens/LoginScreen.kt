@@ -1,5 +1,6 @@
 package com.example.wealthwings.Screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -58,7 +59,9 @@ fun LoginScreen(navController: NavController) {
                     onValueChange = { email = it },
                     label = { Text("Email") },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
                 Spacer(modifier = Modifier.height(0.dp))
 
@@ -69,20 +72,32 @@ fun LoginScreen(navController: NavController) {
                     label = { Text("Password") },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
                 Spacer(modifier = Modifier.height(0.dp))
 
                 // Login button
                 Button(
                     onClick = {
-                        UserService.loginUser(email, password, onSuccess = {
-                            navController.navigate("transaction") {
-                                popUpTo(Screen.Login.route) { inclusive = true }
-                            }
-                        }, onError = { loginError = it })
+                        if (email.isBlank() || password.isBlank()) {
+                            loginError = "Email and Password cannot be empty"
+                        } else {
+                            Log.i("Info", "Attempt to log in")
+                            UserService.loginUser(email, password, onSuccess = {
+                                Log.i("Info", "Attempt successful")
+                                navController.navigate("transaction") {
+                                    popUpTo(Screen.Login.route) { inclusive = true }
+                                }
+                            }, onError = {
+                                loginError = it
+                            })
+                        }
                     },
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Login")

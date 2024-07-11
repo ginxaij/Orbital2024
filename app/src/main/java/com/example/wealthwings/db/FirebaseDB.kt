@@ -1,7 +1,9 @@
 package com.example.wealthwings.db
 
 import android.content.ContentValues.TAG
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.wealthwings.model.Expense
@@ -11,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.time.LocalDate
 
 // This file contains all functions that reads and writes to the database.
 
@@ -29,17 +32,27 @@ fun writeNewUser(uid: String, password: String, email: String) {
 }
 
 // This function loads all expenses to be displayed on expenses page
-fun loadExpenses(uid : String): LiveData<List<Expense>> {
+fun loadExpenses(uid : String, startDate: LocalDate?, endDate: LocalDate?): LiveData<List<Expense>> {
     if (uid != null) {
         val expensesRef = usersReference.child(uid).child("expenses")
         val expensesLiveData = MutableLiveData<List<Expense>>()
         expensesRef.addValueEventListener(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
                 val expenses = mutableListOf<Expense>()
                 for (expenseSnapshot in snapshot.children) {
                     val expense = expenseSnapshot.getValue(Expense::class.java)
-                    expense?.let {
-                        expenses.add(it)
+                    if (startDate == null || endDate == null) {
+                        expense?.let {
+                            expenses.add(it)
+                        }
+                    } else {
+                        if (startDate!! <= LocalDate.parse(expense!!.date) &&
+                            LocalDate.parse(expense.date) <= endDate) {
+                            expense.let {
+                                expenses.add(it)
+                            }
+                        }
                     }
                 }
                 expensesLiveData.value = expenses
