@@ -1,7 +1,6 @@
 package com.example.wealthwings
 
 //import com.example.wealthwings.viewmodels.StockSearchViewModel
-import android.app.Application
 import android.content.ContentValues.TAG
 import android.os.Build
 import android.os.Bundle
@@ -10,19 +9,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.Screens.MainScreen
 import com.example.wealthwings.ui.theme.WealthWingsTheme
+import com.example.wealthwings.viewmodels.CompanyFinancialsViewModel
 import com.example.wealthwings.viewmodels.ExpenseViewModel
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
+import com.example.wealthwings.viewmodels.StockSearchViewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.jakewharton.threetenabp.AndroidThreeTen
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var authListener: FirebaseAuth.AuthStateListener
@@ -39,12 +40,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             WealthWingsTheme {
                 val navController = rememberNavController()
-                val expenseViewModel: ExpenseViewModel = viewModel()
-                val stockHoldingViewModel: StockHoldingViewModel = viewModel()
+                val expenseViewModel: ExpenseViewModel = hiltViewModel()
+                val stockHoldingViewModel: StockHoldingViewModel = hiltViewModel()
+                val stockSearchViewModel: StockSearchViewModel = hiltViewModel()
+                val companyFinancialsViewModel: CompanyFinancialsViewModel = hiltViewModel()
                 val authListener = FirebaseAuth.AuthStateListener { auth ->
                     val currentUser = auth.currentUser
                     if (currentUser != null) {
-                        // User is signed in, update UI with user information
                         expenseViewModel.setCurrentUser(currentUser.uid)
                         Log.d(TAG, "User is signed in. UID: ${currentUser.uid}")
                     } else {
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 //                val showBottomBar = remember { mutableStateOf(true) }
 
-                MainScreen(navController, expenseViewModel, stockHoldingViewModel)
+                MainScreen(navController, expenseViewModel, stockHoldingViewModel, stockSearchViewModel, companyFinancialsViewModel)
             }
         }
     }
@@ -70,6 +72,7 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+
 
 
 //class MainActivity : ComponentActivity() {

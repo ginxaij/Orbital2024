@@ -8,14 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.wealthwings.StockMatch
 import com.example.wealthwings.components.TableRow
 import com.example.wealthwings.components.UnstyledTextField
 import com.example.wealthwings.model.StockHolding
@@ -36,24 +43,146 @@ import com.example.wealthwings.ui.theme.BackgroundElevated
 import com.example.wealthwings.ui.theme.Divider
 import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
+import com.example.wealthwings.viewmodels.StockSearchViewModel
+
+//
+//@RequiresApi(Build.VERSION_CODES.O)
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+// test the test branch
+//fun AddStockHolding(navController: NavController, viewModel: StockHoldingViewModel) {
+//    var name by remember { mutableStateOf("") }
+//    var quantity by remember { mutableStateOf("") }
+//    var price by remember { mutableStateOf("") }
+////    var expanded by remember { mutableStateOf(false) }
+////    var category by remember { mutableStateOf("Select") }
+//
+//    Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = { Text("Add") }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+//                    containerColor = Background
+//                )
+//            )
+//        },
+//        content = { innerPadding ->
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                verticalArrangement = Arrangement.Center,
+//                modifier = Modifier.padding(innerPadding)
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .padding(24.dp)
+//                        .clip(Shapes.medium)
+//                        .background(BackgroundElevated)
+//                        .fillMaxWidth()
+//                ) {
+//                    TableRow(label = "Name", detail = {
+//                        UnstyledTextField(
+//                            value = name,
+//                            onValueChange = { name = it },
+//                            modifier = Modifier.fillMaxWidth(),
+//                            placeholder = { Text("") },
+//                            arrangement = Arrangement.End,
+//                            maxLines = 1,
+//                            textStyle = TextStyle(
+//                                textAlign = TextAlign.Right,
+//                            ),
+//                            keyboardOptions = KeyboardOptions(
+//                            )
+//                        )
+//                    })
+//
+//                    Divider(thickness = 1.dp, color = Divider)
+//
+//                    TableRow(label = "Price", detail = {
+//                        UnstyledTextField(
+//                            value = price,
+//                            onValueChange = { text -> price = text },
+//                            modifier = Modifier.fillMaxWidth(),
+//                            placeholder = { Text("") },
+//                            arrangement = Arrangement.End,
+//                            maxLines = 1,
+//                            textStyle = TextStyle(
+//                                textAlign = TextAlign.Right,
+//                            ),
+//                            keyboardOptions = KeyboardOptions(
+//                                keyboardType = KeyboardType.Number,
+//                            )
+//                        )
+//                    })
+//
+//                    Divider(thickness = 1.dp, color = Divider)
+//
+//                    TableRow(label = "Quantity", detail = {
+//                        UnstyledTextField(
+//                            value = quantity,
+//                            onValueChange = { text -> quantity = text },
+//                            modifier = Modifier.fillMaxWidth(),
+//                            placeholder = { Text("") },
+//                            arrangement = Arrangement.End,
+//                            maxLines = 1,
+//                            textStyle = TextStyle(
+//                                textAlign = TextAlign.Right,
+//                            ),
+//                            keyboardOptions = KeyboardOptions(
+//                                keyboardType = KeyboardType.Number,
+//                            )
+//                        )
+//                    })
+//                }
+//
+//                    Button(
+//                        onClick = {
+//                            if (name.isNotBlank() && quantity.isNotBlank() && price.isNotBlank()) {
+//                                val stockHolding = StockHolding(
+//                                    //UUID(),
+//                                    name = name,
+//                                    price = price.toDouble(),
+//                                    quantity = quantity.toInt() ,
+//
+//                                )
+//                                viewModel.addHolding(stockHolding)
+//                                navController.navigate("investment") {
+//                                    popUpTo("investment") {
+//                                        saveState = true
+//                                    }
+//                                    launchSingleTop = true
+//                                }
+//                            }
+//                        }, modifier = Modifier.padding(16.dp),
+//                        shape = Shapes.large
+//                    ) {
+//                        Text(text = "Enter")
+//                    }
+//                }
+//
+//
+//        }
+//    )
+//}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-// test the test branch
-fun AddStockHolding(navController: NavController, viewModel: StockHoldingViewModel) {
-    var name by remember { mutableStateOf("") }
+fun AddStockHolding(
+    navController: NavController,
+    viewModel: StockHoldingViewModel,
+    stockSearchViewModel: StockSearchViewModel
+) {
+    var query by remember { mutableStateOf("") }
+    val searchResults by stockSearchViewModel.searchResults.collectAsState(emptyList())
+    val isLoading by stockSearchViewModel.isLoading.collectAsState()
+    var selectedStock by remember { mutableStateOf<StockMatch?>(null) }
     var quantity by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
-//    var expanded by remember { mutableStateOf(false) }
-//    var category by remember { mutableStateOf("Select") }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add") }, colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Background
-                )
+                title = { Text("Add Stock Holding") },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Background)
             )
         },
         content = { innerPadding ->
@@ -62,77 +191,94 @@ fun AddStockHolding(navController: NavController, viewModel: StockHoldingViewMod
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                Column(
+                TextField(
+                    value = query,
+                    onValueChange = {
+                        query = it
+                        if (query.isNotBlank()) {
+                            stockSearchViewModel.searchStocks(query)
+                        }
+                    },
+                    placeholder = { Text("Add Stocks") },
+                    trailingIcon = {
+                        IconButton(onClick = { stockSearchViewModel.searchStocks(query) }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
+                    },
                     modifier = Modifier
-                        .padding(24.dp)
-                        .clip(Shapes.medium)
-                        .background(BackgroundElevated)
                         .fillMaxWidth()
-                ) {
-                    TableRow(label = "Name", detail = {
-                        UnstyledTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("") },
-                            arrangement = Arrangement.End,
-                            maxLines = 1,
-                            textStyle = TextStyle(
-                                textAlign = TextAlign.Right,
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                            )
-                        )
-                    })
+                        .padding(16.dp)
+                )
 
-                    Divider(thickness = 1.dp, color = Divider)
-
-                    TableRow(label = "Price", detail = {
-                        UnstyledTextField(
-                            value = price,
-                            onValueChange = { text -> price = text },
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("") },
-                            arrangement = Arrangement.End,
-                            maxLines = 1,
-                            textStyle = TextStyle(
-                                textAlign = TextAlign.Right,
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                            )
-                        )
-                    })
-
-                    Divider(thickness = 1.dp, color = Divider)
-
-                    TableRow(label = "Quantity", detail = {
-                        UnstyledTextField(
-                            value = quantity,
-                            onValueChange = { text -> quantity = text },
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("") },
-                            arrangement = Arrangement.End,
-                            maxLines = 1,
-                            textStyle = TextStyle(
-                                textAlign = TextAlign.Right,
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                            )
-                        )
-                    })
+                if (query.isNotBlank() && !searchResults.isNullOrEmpty()) {
+                    StockList(
+                        modifier = Modifier.padding(innerPadding),
+                        searchResults = searchResults,
+                        isLoading = isLoading,
+                        onItemClick = { stock ->
+                            selectedStock = stock
+                            query = ""
+                        }
+                    )
                 }
+
+                if (selectedStock != null) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .clip(Shapes.medium)
+                            .background(BackgroundElevated)
+                            .fillMaxWidth()
+                    ) {
+                        TableRow(label = "Name: ${selectedStock?.name}")
+
+                        Divider(thickness = 1.dp, color = Divider)
+
+                        TableRow(label = "Price", detail = {
+                            UnstyledTextField(
+                                value = price,
+                                onValueChange = { text -> price = text },
+                                modifier = Modifier.fillMaxWidth(),
+                                placeholder = { Text("") },
+                                arrangement = Arrangement.End,
+                                maxLines = 1,
+                                textStyle = TextStyle(
+                                    textAlign = TextAlign.Right,
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                )
+                            )
+                        })
+
+                        Divider(thickness = 1.dp, color = Divider)
+
+                        TableRow(label = "Quantity", detail = {
+                            UnstyledTextField(
+                                value = quantity,
+                                onValueChange = { text -> quantity = text },
+                                modifier = Modifier.fillMaxWidth(),
+                                placeholder = { Text("") },
+                                arrangement = Arrangement.End,
+                                maxLines = 1,
+                                textStyle = TextStyle(
+                                    textAlign = TextAlign.Right,
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                )
+                            )
+                        })
+                    }
 
                     Button(
                         onClick = {
-                            if (name.isNotBlank() && quantity.isNotBlank() && price.isNotBlank()) {
+                            if (selectedStock != null && quantity.isNotBlank() && price.isNotBlank()) {
                                 val stockHolding = StockHolding(
-                                    //UUID(),
-                                    name = name,
+                                    symbol = selectedStock!!.symbol,
+                                    name = selectedStock!!.name,
                                     price = price.toDouble(),
-                                    quantity = quantity.toInt() ,
-
+                                    quantity = quantity.toInt()
                                 )
                                 viewModel.addHolding(stockHolding)
                                 navController.navigate("investment") {
@@ -148,9 +294,7 @@ fun AddStockHolding(navController: NavController, viewModel: StockHoldingViewMod
                         Text(text = "Enter")
                     }
                 }
-
-
+            }
         }
     )
 }
-

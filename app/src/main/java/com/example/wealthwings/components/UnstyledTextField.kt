@@ -2,8 +2,8 @@ package com.example.wealthwings.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -14,12 +14,13 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.wealthwings.ui.theme.Primary
 import com.example.wealthwings.ui.theme.TextPrimary
@@ -49,16 +50,15 @@ fun UnstyledTextField(
     shape: androidx.compose.ui.graphics.Shape = TextFieldDefaults.filledShape,
     colors: TextFieldColors = TextFieldDefaults.textFieldColors()
 ) {
-    // If color is not provided via the text style, use content color as a default
     val textColor = TextPrimary
-    val mergedTextStyle =
-        textStyle.merge(TextStyle(color = textColor))
+    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
-    BasicTextField(value = value,
+    BasicTextField(
+        value = value,
         onValueChange = onValueChange,
         enabled = enabled,
         readOnly = readOnly,
-        textStyle = mergedTextStyle,
+        textStyle = mergedTextStyle.copy(textAlign = TextAlign.End),
         cursorBrush = SolidColor(Primary),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
@@ -72,10 +72,9 @@ fun UnstyledTextField(
                 visualTransformation = visualTransformation,
                 innerTextField = innerTextField,
                 placeholder = {
-                    Row(
+                    Box(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = arrangement,
-                        verticalAlignment = CenterVertically
+                        contentAlignment = Alignment.CenterEnd
                     ) {
                         placeholder?.invoke()
                     }
@@ -99,5 +98,7 @@ fun UnstyledTextField(
                     disabledIndicatorColor = Color.Transparent,
                 ),
             )
-        })
+        },
+        modifier = modifier
+    )
 }

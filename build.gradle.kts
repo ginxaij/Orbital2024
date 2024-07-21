@@ -6,4 +6,22 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     //alias(libs.plugins.google.gms.google.services) apply false
     id("com.google.gms.google-services")version "4.4.1" apply false
+    id("com.google.dagger.hilt.android")version "2.51.1" apply false
 }
+
+
+
+
+
+//buildscript {
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath("com.android.tools.build:gradle:8.0.2") // Update with the latest version
+//        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10") // Update with the latest version
+//        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.5") // Add Hilt classpath
+//        classpath("com.google.gms:google-services:4.4.1") // Firebase services classpath
+//    }
+//}
