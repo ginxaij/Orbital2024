@@ -21,34 +21,28 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
     var stockHolding: LiveData<List<StockHolding>> = stockHoldingDao.getAllHoldings()
     private val _totalAmount = MediatorLiveData<Double>().apply {
         addSource(stockHolding) { stockHoldingList ->
-            value = stockHoldingList.sumOf { it.price * it.quantity }
+            value = stockHoldingList.sumOf { it.totalPrice }
         }
     }
 
     val totalAmount: LiveData<Double> get() = _totalAmount
 
-    fun addHolding(stockHolding: StockHolding) {
+    fun addHolding(newStockHolding: StockHolding) {
         viewModelScope.launch(Dispatchers.IO) {
-            val existingHolding = stockHoldingDao.getHoldingByName(stockHolding.name)
+            val existingHolding = stockHoldingDao.getHoldingBySymbol(newStockHolding.symbol)
             if (existingHolding != null) {
-                stockHoldingDao.updateQuantity(stockHolding.name, stockHolding.quantity)
+                // Update the existing holding with the new quantity and total price
+                val updatedQuantity = existingHolding.quantity + newStockHolding.quantity
+                val updatedTotalPrice = existingHolding.totalPrice + (newStockHolding.price * newStockHolding.quantity)
+                stockHoldingDao.updateHolding(newStockHolding.symbol, updatedQuantity, updatedTotalPrice)
             } else {
-                stockHoldingDao.addHolding(stockHolding)
+                // Set totalPrice initially to price * quantity
+                val initialTotalPrice = newStockHolding.price * newStockHolding.quantity
+                val newHolding = newStockHolding.copy(totalPrice = initialTotalPrice)
+                stockHoldingDao.addHolding(newHolding)
             }
         }
     }
-
-//    fun getHoldings(): LiveData<List<StockHolding>> {
-//        return readHoldings(currentUserUid.toString())
-//    }
-
-
-
-//    fun addHolding(stockHolding: StockHolding) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            stockHoldingDao.addHolding(stockHolding)
-//        }
-//    }
 
     fun deleteHolding(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -61,5 +55,4 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
             stockHoldingDao.deleteAllHoldings()
         }
     }
-
 }

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -188,8 +189,10 @@ fun AddStockHolding(
         content = { innerPadding ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(innerPadding)
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 TextField(
                     value = query,
@@ -207,12 +210,12 @@ fun AddStockHolding(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
 
                 if (query.isNotBlank() && !searchResults.isNullOrEmpty()) {
                     StockList(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.fillMaxSize(),
                         searchResults = searchResults,
                         isLoading = isLoading,
                         onItemClick = { stock ->
@@ -230,7 +233,13 @@ fun AddStockHolding(
                             .background(BackgroundElevated)
                             .fillMaxWidth()
                     ) {
-                        TableRow(label = "Name: ${selectedStock?.name}")
+                        TableRow(label = "Name", detail = {
+                            Text(
+                                text = selectedStock?.name ?: "",
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Right
+                            )
+                        })
 
                         Divider(thickness = 1.dp, color = Divider)
 
@@ -288,7 +297,8 @@ fun AddStockHolding(
                                     launchSingleTop = true
                                 }
                             }
-                        }, modifier = Modifier.padding(16.dp),
+                        },
+                        modifier = Modifier.padding(16.dp),
                         shape = Shapes.large
                     ) {
                         Text(text = "Enter")

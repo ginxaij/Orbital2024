@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.wealthwings.model.StockHolding
 
 
@@ -29,8 +31,9 @@ import com.example.wealthwings.model.StockHolding
 //    }
 //}
 
-@Database(entities = [StockHolding::class], version = 2, exportSchema = false)
+@Database(entities = [StockHolding::class], version = 3, exportSchema = false)
 abstract class StockHoldingDatabase : RoomDatabase() {
+
     abstract fun getStockHoldingDao(): StockHoldingDao
 
     companion object {
@@ -44,10 +47,23 @@ abstract class StockHoldingDatabase : RoomDatabase() {
                     StockHoldingDatabase::class.java,
                     "stock_holding_database"
                 )
-                    .fallbackToDestructiveMigration() // This will drop the database if the schema changes
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance
+            }
+        }
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE StockHolding ADD COLUMN totalPrice DOUBLE NOT NULL DEFAULT 0.0")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Add the totalPrice column if it's not already present
+                database.execSQL("ALTER TABLE StockHolding ADD COLUMN totalPrice DOUBLE NOT NULL DEFAULT 0.0")
             }
         }
     }

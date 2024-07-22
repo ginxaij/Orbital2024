@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -105,7 +104,8 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                     Text(text = "Your Holdings", fontSize = 30.sp)
                     Text("${totalAmount}", fontSize = 30.sp)
                     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(stockHolding, key = { it.id }) { stockHolding ->
+                        items(stockHolding, key = { it.id }) { holding ->
+                            val averagePrice = if (holding.quantity > 0) holding.totalPrice / holding.quantity else 0.0
                             Column(
                                 Modifier
                                     .padding()
@@ -118,9 +118,23 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                                         .background(BackgroundElevated),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(text = "Name: ${stockHolding.name}", fontSize = 16.sp)
-                                    Spacer(modifier = Modifier.padding(12.dp))
-                                    Text(text = "Amount: ${stockHolding.quantity}", fontSize = 16.sp)
+                                    Column(
+                                        Modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(0.7f)
+                                    ) {
+                                        Text(text = "Name: ${holding.name}", fontSize = 16.sp)
+                                        Text(text = "Symbol: ${holding.symbol}", fontSize = 16.sp)
+                                    }
+                                    Column(
+                                        Modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalAlignment = Alignment.End
+                                    ) {
+                                        Text(text = "Amount: ${holding.quantity}", fontSize = 16.sp)
+                                        Text(text = "Avg Price: ${"%.2f".format(averagePrice)}", fontSize = 16.sp)
+                                    }
                                 }
                                 Divider()
                             }
@@ -131,6 +145,7 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
         }
     )
 }
+
 //
 //@RequiresApi(Build.VERSION_CODES.O)
 //@OptIn(ExperimentalMaterial3Api::class)
