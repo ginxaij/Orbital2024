@@ -2,7 +2,6 @@ package com.example.wealthwings.viewmodels
 
 import android.app.Application
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -15,25 +14,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import java.time.Period
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     private var currentUserUid: String? = null
 
+    // LiveData for managing expenses and dates
     private val _startDate = MutableLiveData<LocalDate?>()
     val startDate: LiveData<LocalDate?> get() = _startDate
 
     private val _endDate = MutableLiveData<LocalDate?>()
     val endDate: LiveData<LocalDate?> get() = _endDate
 
-//    private var _startDate: MutableLiveData<LocalDate?>()
-//    val startDate: LiveData<LocalDate?>? get() = _startDate
-//
-//    private var _endDate: MutableLiveData<LocalDate?>()
-//    val endDate: LiveData<LocalDate?>? get() = _endDate
-
-    var expensesLiveData = getExpenses(startDate?.value, endDate?.value)
+    var expensesLiveData = getExpenses(startDate.value, endDate.value)
 
     private val _totalAmount = MediatorLiveData<Double>().apply {
         addSource(expensesLiveData) { expenseList ->
@@ -42,10 +35,10 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     }
     val totalAmount: LiveData<Double> get() = _totalAmount
 
+    // Function to set date range
     fun setStartAndEndDate(startDateIn: LocalDate?, endDateIn: LocalDate?) {
-        _startDate?.value = startDateIn // Set new startDate value
-        _endDate?.value = endDateIn // Set new endDate value
-
+        _startDate.value = startDateIn
+        _endDate.value = endDateIn
         expensesLiveData = getExpenses(startDateIn, endDateIn)
         _totalAmount.removeSource(expensesLiveData)
         _totalAmount.addSource(expensesLiveData) { expenses ->
@@ -53,20 +46,22 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Function to set the current user
     fun setCurrentUser(input: String?) {
         currentUserUid = input
-        // Reload expenses for the current user
-        expensesLiveData = getExpenses(startDate?.value, endDate?.value)
+        expensesLiveData = getExpenses(startDate.value, endDate.value)
         _totalAmount.removeSource(expensesLiveData)
         _totalAmount.addSource(expensesLiveData) { expenses ->
             _totalAmount.value = expenses.sumOf { it.amount }
         }
     }
 
+    // Function to get all expenses within a date range
     fun getExpenses(startDate: LocalDate?, endDate: LocalDate?): LiveData<List<Expense>> {
         return FirebaseDB().loadExpenses(currentUserUid.toString(), startDate, endDate)
     }
 
+    // Function to add a new expense
     fun addExpense(expense: Expense) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -75,6 +70,16 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Function to update an existing expense
+    fun updateExpense(expense: Expense) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                FirebaseDB().updateExpense(currentUserUid.toString(), expense)
+            }
+        }
+    }
+
+    // Function to delete an expense by ID
     fun deleteExpense(expenseUID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -83,6 +88,7 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    // Function to delete all expenses
     fun deleteAllExpenses() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -90,7 +96,14 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
+
+    // Function to get a specific expense by ID
+    fun getExpenseById(expenseId: String): LiveData<Expense?> {
+        return FirebaseDB().loadExpenseById(currentUserUid.toString(), expenseId)
+    }
 }
+
+
 //    private val expenseDao: ExpenseDao = ExpenseDatabase.getInstance(application).getExpenseDao()
 //    val expenses: LiveData<List<Expense>> = expenseDao.getAllExpenses()
 //    private val _totalAmount = MediatorLiveData<Double>().apply {

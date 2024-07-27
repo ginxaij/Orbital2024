@@ -38,6 +38,7 @@ fun StockList(
                 items(searchResults) { company ->
                     CompanyItem(company = company, modifier = Modifier
                         .fillMaxWidth()
+                        .fillMaxWidth()
                         .padding(8.dp)
                         .clickable { onItemClick(company) })
                 }

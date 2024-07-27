@@ -1,56 +1,88 @@
 package com.example.wealthwings.Screens
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import com.example.wealthwings.db.FirebaseDB
-import com.google.android.gms.tasks.Task
-import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.auth.UserProfileChangeRequest
 
+//object UserService {
+//    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+//        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    onSuccess()
+//                } else {
+//                    onError(task.exception?.message ?: "An unknown error occurred")
+//                }
+//            }
+//    }
+//
+//    fun registerUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+//        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    writeNewUser(FirebaseAuth.getInstance().currentUser!!.uid, password, email)
+//                    onSuccess()
+//                } else {
+//                    onError(task.exception?.message ?: "An unknown error occurred")
+//                }
+//            }
+//    }
+//}
 
 object UserService {
+    private val auth = FirebaseAuth.getInstance()
 
-    fun loginUser(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+    fun registerUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onSuccess()
+                    val user = auth.currentUser
+                    user?.let {
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(email.substringBefore('@'))
+                            .build()
+                        it.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                sendVerificationEmail(onSuccess, onError)
+                            } else {
+                                onError(task.exception?.message ?: "Profile update failed")
+                            }
+                        }
+                    }
                 } else {
-                    onError(task.exception?.message ?: "An unknown error occurred")
+                    onError(task.exception?.message ?: "Registration failed")
                 }
             }
     }
 
-    fun registerUser(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+    private fun sendVerificationEmail(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        val user = auth.currentUser
+        user?.sendEmailVerification()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                onSuccess()
+            } else {
+                onError(task.exception?.message ?: "Failed to send verification email")
+            }
+        }
+    }
+
+    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    FirebaseDB().writeNewUser(FirebaseAuth.getInstance().currentUser!!.uid, password, email)
-                    onSuccess()
+                    val user = auth.currentUser
+                    if (user?.isEmailVerified == true) {
+                        onSuccess()
+                    } else {
+                        onError("Please verify your email first")
+                    }
                 } else {
-                    onError(task.exception?.message ?: "An unknown error occurred")
+                    onError(task.exception?.message ?: "Login failed")
                 }
             }
     }
-
     fun changeUserEmail(
         oldEmail: String,
         newEmail: String,
@@ -166,3 +198,4 @@ object UserService {
     }
 
 }
+

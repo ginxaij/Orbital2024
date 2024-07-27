@@ -1,6 +1,6 @@
 package com.example.wealthwings.model
 
-data class Question (
+data class Question(
     val text: String,
     val options: List<String>,
     val correctAnswerIndex: Int

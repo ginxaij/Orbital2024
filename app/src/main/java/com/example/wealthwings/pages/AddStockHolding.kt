@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -46,123 +49,6 @@ import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
 import com.example.wealthwings.viewmodels.StockSearchViewModel
 
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-// test the test branch
-//fun AddStockHolding(navController: NavController, viewModel: StockHoldingViewModel) {
-//    var name by remember { mutableStateOf("") }
-//    var quantity by remember { mutableStateOf("") }
-//    var price by remember { mutableStateOf("") }
-////    var expanded by remember { mutableStateOf(false) }
-////    var category by remember { mutableStateOf("Select") }
-//
-//    Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                title = { Text("Add") }, colors = TopAppBarDefaults.mediumTopAppBarColors(
-//                    containerColor = Background
-//                )
-//            )
-//        },
-//        content = { innerPadding ->
-//            Column(
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center,
-//                modifier = Modifier.padding(innerPadding)
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .padding(24.dp)
-//                        .clip(Shapes.medium)
-//                        .background(BackgroundElevated)
-//                        .fillMaxWidth()
-//                ) {
-//                    TableRow(label = "Name", detail = {
-//                        UnstyledTextField(
-//                            value = name,
-//                            onValueChange = { name = it },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            placeholder = { Text("") },
-//                            arrangement = Arrangement.End,
-//                            maxLines = 1,
-//                            textStyle = TextStyle(
-//                                textAlign = TextAlign.Right,
-//                            ),
-//                            keyboardOptions = KeyboardOptions(
-//                            )
-//                        )
-//                    })
-//
-//                    Divider(thickness = 1.dp, color = Divider)
-//
-//                    TableRow(label = "Price", detail = {
-//                        UnstyledTextField(
-//                            value = price,
-//                            onValueChange = { text -> price = text },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            placeholder = { Text("") },
-//                            arrangement = Arrangement.End,
-//                            maxLines = 1,
-//                            textStyle = TextStyle(
-//                                textAlign = TextAlign.Right,
-//                            ),
-//                            keyboardOptions = KeyboardOptions(
-//                                keyboardType = KeyboardType.Number,
-//                            )
-//                        )
-//                    })
-//
-//                    Divider(thickness = 1.dp, color = Divider)
-//
-//                    TableRow(label = "Quantity", detail = {
-//                        UnstyledTextField(
-//                            value = quantity,
-//                            onValueChange = { text -> quantity = text },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            placeholder = { Text("") },
-//                            arrangement = Arrangement.End,
-//                            maxLines = 1,
-//                            textStyle = TextStyle(
-//                                textAlign = TextAlign.Right,
-//                            ),
-//                            keyboardOptions = KeyboardOptions(
-//                                keyboardType = KeyboardType.Number,
-//                            )
-//                        )
-//                    })
-//                }
-//
-//                    Button(
-//                        onClick = {
-//                            if (name.isNotBlank() && quantity.isNotBlank() && price.isNotBlank()) {
-//                                val stockHolding = StockHolding(
-//                                    //UUID(),
-//                                    name = name,
-//                                    price = price.toDouble(),
-//                                    quantity = quantity.toInt() ,
-//
-//                                )
-//                                viewModel.addHolding(stockHolding)
-//                                navController.navigate("investment") {
-//                                    popUpTo("investment") {
-//                                        saveState = true
-//                                    }
-//                                    launchSingleTop = true
-//                                }
-//                            }
-//                        }, modifier = Modifier.padding(16.dp),
-//                        shape = Shapes.large
-//                    ) {
-//                        Text(text = "Enter")
-//                    }
-//                }
-//
-//
-//        }
-//    )
-//}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -182,7 +68,7 @@ fun AddStockHolding(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Stock Holding") },
+                title = { Text("Add Stock") },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Background)
             )
         },
@@ -204,16 +90,21 @@ fun AddStockHolding(
                     },
                     placeholder = { Text("Add Stocks") },
                     trailingIcon = {
-                        IconButton(onClick = { stockSearchViewModel.searchStocks(query) }) {
+                        IconButton(onClick = { }) {
                             Icon(Icons.Default.Search, contentDescription = "Search")
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
                 )
 
-                if (query.isNotBlank() && !searchResults.isNullOrEmpty()) {
+                if (query.isNotBlank() && searchResults.isNotEmpty()) {
                     StockList(
                         modifier = Modifier.fillMaxSize(),
                         searchResults = searchResults,

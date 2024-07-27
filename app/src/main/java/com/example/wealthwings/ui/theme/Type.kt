@@ -40,7 +40,7 @@ val Typography = Typography(
     ),
     headlineSmall =  TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
         lineHeight = 38.sp,
     ),

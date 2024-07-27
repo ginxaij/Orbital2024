@@ -29,7 +29,7 @@ class CompanyFinancialsViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = api.getCompanyOverview(symbol)
+                val response = api.getCompanyOverview(symbol = symbol)
                 _companyOverview.value = response
                 fetchLatestPrice(symbol)
             } catch (e: Exception) {
@@ -43,16 +43,20 @@ class CompanyFinancialsViewModel @Inject constructor(
 
     private suspend fun fetchLatestPrice(symbol: String) {
         try {
-            val response = api.getIntradayPrices(symbol)
-            val latestEntry = response.timeSeries.values.firstOrNull()
-            _latestPrice.value = latestEntry?.close
+            val response = api.getDailyPrices(symbol = symbol)
+            if (response.timeSeries != null) {
+                val latestEntry = response.timeSeries.values.firstOrNull()
+                _latestPrice.value = latestEntry?.close
+            } else {
+                _latestPrice.value = null
+                Log.e("CompanyFinancialsVM", "Time series data is null or empty")
+            }
         } catch (e: Exception) {
             _latestPrice.value = null
             Log.e("CompanyFinancialsVM", "Error fetching latest price", e)
         }
     }
 }
-
 //@HiltViewModel
 //class CompanyFinancialsViewModel @Inject constructor(
 //    private val api: StockApi

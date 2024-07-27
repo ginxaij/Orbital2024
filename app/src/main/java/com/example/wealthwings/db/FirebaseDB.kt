@@ -14,7 +14,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.getValue
 import java.time.LocalDate
 
 // This file contains all functions that reads and writes to the database.
@@ -151,6 +150,20 @@ class FirebaseDB {
             }
     }
 
+    // This function updates an existing expense in the database
+    fun updateExpense(uid: String, expense: Expense) {
+        val expenseRef = usersReference.child(uid).child("expenses").child(expense.id)
+        expenseRef.setValue(expense)
+            .addOnSuccessListener {
+                // Data updated successfully
+                println("Expense updated successfully!")
+            }
+            .addOnFailureListener {
+                // Failed to update data
+                println("Error updating expense: ${it.message}")
+            }
+    }
+
     // This function removes specified expense from the database
     fun removeExpense(uid: String, expenseUID: String) {
         val expenseRef = usersReference.child(uid).child("expenses").child(expenseUID)
@@ -164,7 +177,6 @@ class FirebaseDB {
                 Log.e("ExpenseViewModel", "Error deleting expense", exception)
             }
     }
-
 
     // This function removes all expenses from the database
     fun removeAllExpense(uid: String) {
@@ -180,6 +192,22 @@ class FirebaseDB {
             }
     }
 
+    // This function loads a specific expense by ID
+    fun loadExpenseById(uid: String, expenseId: String): LiveData<Expense?> {
+        val expenseLiveData = MutableLiveData<Expense?>()
+        val expenseRef = usersReference.child(uid).child("expenses").child(expenseId)
+        expenseRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val expense = snapshot.getValue(Expense::class.java)
+                expenseLiveData.value = expense
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to read expense", error.toException())
+            }
+        })
+        return expenseLiveData
+    }
 
     fun readHoldings(uid: String): LiveData<List<StockHolding>> {
         if (uid != null) {
@@ -222,6 +250,7 @@ class FirebaseDB {
             stockHoldingRef.setValue(updatedStock)
         }
     }
+
     fun removeAllHoldings() {
         val stockHoldingRef = usersReference.child(FirebaseAuth.getInstance().currentUser!!.uid)
             .child("stockHoldings")

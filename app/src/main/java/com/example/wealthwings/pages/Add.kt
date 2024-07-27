@@ -42,7 +42,6 @@ import com.example.wealthwings.ui.theme.Divider
 import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.ui.theme.TextPrimary
 import com.example.wealthwings.viewmodels.ExpenseViewModel
-import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -144,7 +143,7 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("0") },
+                            placeholder = { Text("") },
                             arrangement = Arrangement.End,
                             maxLines = 1,
                             textStyle = TextStyle(

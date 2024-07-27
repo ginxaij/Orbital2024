@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -30,6 +31,7 @@ import com.example.wealthwings.pages.ChangePassword
 import com.example.wealthwings.pages.CompanyDetailsScreen
 import com.example.wealthwings.pages.DeleteUser
 import com.example.wealthwings.pages.EditDate
+import com.example.wealthwings.pages.ExpenseDetailScreen
 import com.example.wealthwings.pages.FAQ
 import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
@@ -39,7 +41,6 @@ import com.example.wealthwings.pages.Profile
 import com.example.wealthwings.pages.Quiz
 import com.example.wealthwings.pages.QuizGamePage
 import com.example.wealthwings.pages.Transaction
-
 import com.example.wealthwings.ui.theme.BottomBar
 import com.example.wealthwings.viewmodels.CompanyFinancialsViewModel
 import com.example.wealthwings.viewmodels.ExpenseViewModel
@@ -111,11 +112,12 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
             }
             composable("investment") {
                 showBottomBar.value = true
+                val stockSearchViewModel: StockSearchViewModel = hiltViewModel()
                 Investment(navController, stockHoldingViewModel, stockSearchViewModel)
             }
             composable("quiz") {
                 showBottomBar.value = true
-                Quiz(navController, "Quiz")
+                Quiz(navController, "there")
             }
             composable("more") {
                 showBottomBar.value = true
@@ -145,14 +147,13 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
                 showBottomBar.value = true
                 Add(navController, expenseViewModel)
             }
-
             composable("transaction/editdate") {
                 showBottomBar.value = true
                 EditDate(navController, expenseViewModel)
             }
-
             composable("investment/addstockholding") {
                 showBottomBar.value = true
+                val stockSearchViewModel: StockSearchViewModel = hiltViewModel()
                 AddStockHolding(navController, stockHoldingViewModel, stockSearchViewModel)
             }
             composable("quiz/news") {
@@ -175,11 +176,14 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
                 showBottomBar.value = true
                 QuizGamePage(navController, "stock")
             }
-            composable("transaction/editdate") {
+            composable(
+                "transaction/detail/{expenseId}",
+                arguments = listOf(navArgument("expenseId") { type = NavType.StringType })
+            ) { backStackEntry ->
                 showBottomBar.value = true
-                EditDate(navController, expenseViewModel)
+                val expenseId = backStackEntry.arguments?.getString("expenseId") ?: ""
+                ExpenseDetailScreen(navController, expenseId, expenseViewModel)
             }
-
             composable(
                 "companyDetails/{symbol}",
                 arguments = listOf(navArgument("symbol") { type = NavType.StringType })
@@ -191,6 +195,8 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
         }
     }
 }
+
+
 
 //@RequiresApi(Build.VERSION_CODES.O)
 //@Composable

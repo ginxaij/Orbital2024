@@ -1,5 +1,6 @@
 package com.example.wealthwings.pages
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ fun CompanyDetailsScreen(navController: NavController, viewModel: CompanyFinanci
         CircularProgressIndicator()
     } else {
         companyOverview?.let { overview ->
+            Log.d("CompanyDetailsScreen", "Displaying company overview: $overview")
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -45,10 +47,10 @@ fun CompanyDetailsScreen(navController: NavController, viewModel: CompanyFinanci
                 Text(text = "Market Cap: ${overview.marketCapitalization ?: "N/A"}")
                 Text(text = "PE Ratio: ${overview.peRatio ?: "N/A"}")
                 Text(text = "Latest Price: ${latestPrice ?: "N/A"}")
-                // Add more financial details as needed
             }
         } ?: run {
             Text("No data available")
+            Log.d("CompanyDetailsScreen", "No company overview data available")
         }
     }
 }

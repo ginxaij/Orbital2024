@@ -2,7 +2,7 @@ package com.example.wealthwings.pages
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,10 +38,7 @@ import androidx.navigation.NavController
 import com.example.wealthwings.components.LargeButton
 import com.example.wealthwings.model.Expense
 import com.example.wealthwings.ui.theme.Background
-import com.example.wealthwings.ui.theme.BackgroundElevated
-import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.viewmodels.ExpenseViewModel
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
@@ -83,12 +77,14 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
                             .padding(innerPadding)
                             .fillMaxWidth()
                     ) {
-
-                        Row(verticalAlignment = Alignment.CenterVertically,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
-                            ) {
-                            Text("Expenses for ",
-                                fontSize = 20.sp)
+                        ) {
+                            Text(
+                                "Expenses for ",
+                                fontSize = 20.sp
+                            )
                             Spacer(modifier = Modifier.padding(2.dp))
                             OutlinedButton(onClick = { navController.navigate("transaction/editdate") }) {
                                 if (startDate == null || endDate == null) {
@@ -107,7 +103,8 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
                                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                                     val newStartDate = startDate!!.format(formatter).toString().replace("-", "/")
                                     val newEndDate = endDate!!.format(formatter).toString().replace("-", "/")
-                                    Text("%s - %s".format(newStartDate, newEndDate),
+                                    Text(
+                                        "%s - %s".format(newStartDate, newEndDate),
                                         fontSize = 15.sp,
                                         color = Color.White
                                     )
@@ -115,22 +112,17 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
                             }
                         }
                         Spacer(modifier = Modifier.height(1.dp))
-                        Text("$${totalAmount.toBigDecimal().setScale(2)}",
-                                fontSize = 30.sp,
-                                color = Color.White)
-//
-//                        OutlinedButton(onClick = { navController.navigate("transaction/editdate") }) {
-//                            Text("$${totalAmount.toBigDecimal().setScale(2)}",
-//                                fontSize = 30.sp,
-//                                color = Color.White)
-//                        }
+                        Text(
+                            "$${totalAmount.toBigDecimal().setScale(2)}",
+                            fontSize = 30.sp,
+                            color = Color.White
+                        )
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier.padding(13.dp)
                         ) {
-
                             val categories = listOf(
                                 "Food & Dining", "Transportation", "Utilities",
                                 "Groceries", "Miscellaneous"
@@ -148,7 +140,7 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
 
                             PieChart(
                                 data = mapOf(
-                                    Pair(categories[0], mappedCategories[categories[0]] ?: 0.0), // to edit according to DB
+                                    Pair(categories[0], mappedCategories[categories[0]] ?: 0.0),
                                     Pair(categories[1], mappedCategories[categories[1]] ?: 0.0),
                                     Pair(categories[2], mappedCategories[categories[2]] ?: 0.0),
                                     Pair(categories[3], mappedCategories[categories[3]] ?: 0.0),
@@ -160,55 +152,14 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
                 }
                 items(
                     expenses.sortedByDescending { it.date },
-                    key = { it.id }) { expense -> //expenses.value
-                    Divider()
-                    Column(
-                        Modifier
-                            .padding()
-                            .clip(Shapes.medium)
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding()
-                                .background(
-                                    BackgroundElevated
-                                ),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text(text = "Name: ${expense.note}", fontSize = 16.sp)
-                                Spacer(modifier = Modifier.padding(12.dp))
-                                Text(
-                                    text = "Amount: $${expense.amount.toBigDecimal().setScale(2)}",
-                                    fontSize = 16.sp
-                                )
-                            }
-                            IconButton(
-                                onClick = {
-                                    selectedExpense = expense
-                                    showDialog = true
-                                }
-                            ) {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Expense")
-                            }
+                    key = { it.id }
+                ) { expense ->
+                    ExpenseItem(
+                        expense = expense,
+                        onClick = {
+                            navController.navigate("transaction/detail/${expense.id}")
                         }
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding()
-                                .background(
-                                    BackgroundElevated
-                                ),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = "Category: ${expense.category}", fontSize = 12.sp)
-                            Spacer(modifier = Modifier.padding(12.dp))
-                            Text(text = "Date: ${expense.date}", fontSize = 12.sp)
-                        }
-                        Divider()
-                    }
+                    )
                 }
             }
         }
@@ -238,8 +189,67 @@ fun Transaction(navController: NavController, viewModel: ExpenseViewModel) {
             }
         )
     }
-    // THIS IS THE END
 }
+
+@Composable
+fun ExpenseItem(expense: Expense, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            // Top row: Category and Amount
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = expense.category,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "$${expense.amount.toBigDecimal().setScale(2)}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            // Bottom row: Note and Date
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                expense.note?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Text(
+                    text = expense.date,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+        }
+    }
+}
+
+
+
 
 //@RequiresApi(Build.VERSION_CODES.O)
 //@Composable
