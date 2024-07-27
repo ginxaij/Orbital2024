@@ -287,7 +287,8 @@ fun AddStockHolding(
                                     symbol = selectedStock!!.symbol,
                                     name = selectedStock!!.name,
                                     price = price.toDouble(),
-                                    quantity = quantity.toInt()
+                                    quantity = quantity.toInt(),
+                                    totalPrice = quantity.toInt() * price.toDouble(),
                                 )
                                 viewModel.addHolding(stockHolding)
                                 navController.navigate("investment") {

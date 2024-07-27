@@ -12,9 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.wealthwings.Screens.MainScreen
+import com.example.wealthwings.db.FirebaseDB
 import com.example.wealthwings.ui.theme.WealthWingsTheme
 import com.example.wealthwings.viewmodels.CompanyFinancialsViewModel
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.example.wealthwings.viewmodels.NewsViewModel
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
 import com.example.wealthwings.viewmodels.StockSearchViewModel
 import com.google.firebase.FirebaseApp
@@ -44,10 +46,15 @@ class MainActivity : ComponentActivity() {
                 val stockHoldingViewModel: StockHoldingViewModel = hiltViewModel()
                 val stockSearchViewModel: StockSearchViewModel = hiltViewModel()
                 val companyFinancialsViewModel: CompanyFinancialsViewModel = hiltViewModel()
+                val newsViewModel: NewsViewModel = hiltViewModel()
                 val authListener = FirebaseAuth.AuthStateListener { auth ->
                     val currentUser = auth.currentUser
                     if (currentUser != null) {
                         expenseViewModel.setCurrentUser(currentUser.uid)
+                        stockHoldingViewModel.setCurrentUser(currentUser.uid)
+                        if (auth.currentUser!!.email != FirebaseDB().readEmail()) {
+                            FirebaseDB().writeEmail(newEmail = auth.currentUser!!.email.toString())
+                        }
                         Log.d(TAG, "User is signed in. UID: ${currentUser.uid}")
                     } else {
                         // No user is signed in, handle accordingly
@@ -61,7 +68,8 @@ class MainActivity : ComponentActivity() {
 
 //                val showBottomBar = remember { mutableStateOf(true) }
 
-                MainScreen(navController, expenseViewModel, stockHoldingViewModel, stockSearchViewModel, companyFinancialsViewModel)
+                MainScreen(navController, expenseViewModel, stockHoldingViewModel, stockSearchViewModel, companyFinancialsViewModel,
+                    newsViewModel)
             }
         }
     }

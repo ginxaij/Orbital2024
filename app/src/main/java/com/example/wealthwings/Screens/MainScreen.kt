@@ -25,11 +25,16 @@ import androidx.navigation.navArgument
 import com.example.wealthwings.R
 import com.example.wealthwings.pages.Add
 import com.example.wealthwings.pages.AddStockHolding
+import com.example.wealthwings.pages.ChangeEmail
+import com.example.wealthwings.pages.ChangePassword
 import com.example.wealthwings.pages.CompanyDetailsScreen
+import com.example.wealthwings.pages.DeleteUser
 import com.example.wealthwings.pages.EditDate
 import com.example.wealthwings.pages.FAQ
 import com.example.wealthwings.pages.Investment
 import com.example.wealthwings.pages.More
+import com.example.wealthwings.pages.News
+import com.example.wealthwings.pages.NewsContent
 import com.example.wealthwings.pages.Profile
 import com.example.wealthwings.pages.Quiz
 import com.example.wealthwings.pages.QuizGamePage
@@ -38,13 +43,15 @@ import com.example.wealthwings.pages.Transaction
 import com.example.wealthwings.ui.theme.BottomBar
 import com.example.wealthwings.viewmodels.CompanyFinancialsViewModel
 import com.example.wealthwings.viewmodels.ExpenseViewModel
+import com.example.wealthwings.viewmodels.NewsViewModel
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
 import com.example.wealthwings.viewmodels.StockSearchViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewModel, stockHoldingViewModel: StockHoldingViewModel, stockSearchViewModel: StockSearchViewModel, companyFinancialsViewModel: CompanyFinancialsViewModel) {
+fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewModel, stockHoldingViewModel: StockHoldingViewModel, stockSearchViewModel: StockSearchViewModel, companyFinancialsViewModel: CompanyFinancialsViewModel,
+               newsViewModel: NewsViewModel) {
     val navController = rememberNavController()
     val backStackEntry = navController.currentBackStackEntryAsState()
     val showBottomBar = remember { mutableStateOf(true) }
@@ -96,7 +103,7 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
             }
             composable(Screen.Main.route) {
                 showBottomBar.value = true
-                MainScreen(navController, expenseViewModel, stockHoldingViewModel, stockSearchViewModel, companyFinancialsViewModel)
+                MainScreen(navController, expenseViewModel, stockHoldingViewModel, stockSearchViewModel, companyFinancialsViewModel, newsViewModel)
             }
             composable("transaction") {
                 showBottomBar.value = true
@@ -114,21 +121,47 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
                 showBottomBar.value = true
                 More(navController, expenseViewModel, stockHoldingViewModel)
             }
+            composable("more/faq") {
+                showBottomBar.value = true
+                FAQ(navController)
+            }
             composable("more/myprofile") {
                 showBottomBar.value = true
-                Profile(navController, "profile")
+                Profile(navController)
             }
-            composable("more/FAQ") {
+            composable("more/myprofile/changeemail") {
                 showBottomBar.value = true
-                FAQ(navController, "FAQ")
+                ChangeEmail(navController)
+            }
+            composable("more/myprofile/changepassword") {
+                showBottomBar.value = true
+                ChangePassword(navController)
+            }
+            composable("more/myprofile/deleteuser") {
+                showBottomBar.value = true
+                DeleteUser(navController)
             }
             composable("transaction/add") {
                 showBottomBar.value = true
                 Add(navController, expenseViewModel)
             }
+
+            composable("transaction/editdate") {
+                showBottomBar.value = true
+                EditDate(navController, expenseViewModel)
+            }
+
             composable("investment/addstockholding") {
                 showBottomBar.value = true
                 AddStockHolding(navController, stockHoldingViewModel, stockSearchViewModel)
+            }
+            composable("quiz/news") {
+                showBottomBar.value = true
+                News(navController, newsViewModel)
+            }
+            composable("quiz/news/newscontent") {
+                showBottomBar.value = true
+                NewsContent(navController, newsViewModel)
             }
             composable("quiz/CPF") {
                 showBottomBar.value = true

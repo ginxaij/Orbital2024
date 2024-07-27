@@ -112,6 +112,27 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                     })
                     Divider(thickness = 1.dp, color = Divider)
 
+                    TableRow(label = "Category", detail = {
+                        Column(Modifier.clickable { expanded = true }) {
+                            Text(text = category, color = TextPrimary)
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false },
+                                Modifier.background(BackgroundElevated)
+                            ) {
+                                categories.forEach { cat ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = cat) },
+                                        onClick = {
+                                            category = cat
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    })
+
                     TableRow(label = "Note", detail = {
                         UnstyledTextField(
                             value = note,
@@ -134,26 +155,6 @@ fun Add(navController: NavController, viewModel: ExpenseViewModel) {
                         )
                     })
 
-                    TableRow(label = "Category", detail = {
-                        Column(Modifier.clickable { expanded = true }) {
-                            Text(text = category, color = TextPrimary)
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                Modifier.background(BackgroundElevated)
-                            ) {
-                                categories.forEach { cat ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = cat) },
-                                        onClick = {
-                                            category = cat
-                                            expanded = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    })
                 }
 
                 Button(

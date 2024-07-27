@@ -9,10 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.wealthwings.db.loadExpenses
-import com.example.wealthwings.db.removeAllExpense
-import com.example.wealthwings.db.removeExpense
-import com.example.wealthwings.db.writeExpense
+import com.example.wealthwings.db.FirebaseDB
 import com.example.wealthwings.model.Expense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,13 +64,13 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun getExpenses(startDate: LocalDate?, endDate: LocalDate?): LiveData<List<Expense>> {
-        return loadExpenses(currentUserUid.toString(), startDate, endDate)
+        return FirebaseDB().loadExpenses(currentUserUid.toString(), startDate, endDate)
     }
 
     fun addExpense(expense: Expense) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                writeExpense(currentUserUid.toString(), expense)
+                FirebaseDB().writeExpense(currentUserUid.toString(), expense)
             }
         }
     }
@@ -81,7 +78,7 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     fun deleteExpense(expenseUID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                removeExpense(currentUserUid.toString(), expenseUID)
+                FirebaseDB().removeExpense(currentUserUid.toString(), expenseUID)
             }
         }
     }
@@ -89,7 +86,7 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     fun deleteAllExpenses() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                removeAllExpense(currentUserUid.toString())
+                FirebaseDB().removeAllExpense(currentUserUid.toString())
             }
         }
     }

@@ -12,7 +12,7 @@ data class StockHolding(
     val id: Int = 0, // Unique identifier for the stock holding
     val symbol: String = "",
     val name: String = "",
-    val price: Double = 0.0,
-    val totalPrice: Double = 0.0, // Total price paid for the stock
-    val quantity: Int = 0
+    var price: Double = 0.0,
+    var totalPrice: Double = 0.0, // Total price paid for the stock
+    var quantity: Int = 0
 )

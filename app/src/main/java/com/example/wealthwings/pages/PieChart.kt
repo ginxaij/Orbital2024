@@ -25,6 +25,7 @@ import com.example.wealthwings.ui.theme.Purple500
 import com.example.wealthwings.ui.theme.Purple700
 import com.example.wealthwings.ui.theme.Teal200
 import com.example.wealthwings.ui.theme.Blue
+import java.math.RoundingMode
 
 @Composable
 fun PieChart (
@@ -36,8 +37,16 @@ fun PieChart (
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()
 
-    data.values.forEachIndexed { index, values ->
-        floatValue.add(index, 360 * values.toFloat() / totalSum.toFloat())
+    val isSingleSlice = data.size == 1
+
+    if (isSingleSlice) {
+        // If there is only one slice, it should take up the entire pie chart
+        floatValue.add(360f)
+    } else {
+        // Calculate angles for multiple slices
+        data.values.forEach { value ->
+            floatValue.add(360 * value.toFloat() / totalSum.toFloat())
+        }
     }
 
     val colors = listOf(
@@ -159,7 +168,7 @@ fun DetailsPieChartItem(
                 )
                 Text(
                     modifier = Modifier.padding(start = 10.dp),
-                    text = "$" + data.second.toBigDecimal().setScale(2).toString(),
+                    text = "$" + data.second.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toString(),
                     fontWeight = FontWeight.Medium,
                     fontSize = 13.sp,
                     color = Color.Gray

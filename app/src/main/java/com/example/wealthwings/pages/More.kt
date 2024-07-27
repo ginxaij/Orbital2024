@@ -57,7 +57,7 @@ fun More(navController: NavController, expenseViewModel: ExpenseViewModel, stock
                 ) {
                     TableRow("My Profile", hasArrow = true, modifier = Modifier.clickable { navController.navigate("more/myprofile") }) //categories will be inside, can view the profile of the person
                     Divider(thickness = 1.dp, color = Divider)
-                    TableRow("FAQ", hasArrow = true, modifier = Modifier.clickable { navController.navigate("more/FAQ") })
+                    TableRow("FAQ", hasArrow = true, modifier = Modifier.clickable { navController.navigate("more/faq") })
                     Divider(thickness = 1.dp, color = Divider)
                     TableRow(
                         "Erase all data",

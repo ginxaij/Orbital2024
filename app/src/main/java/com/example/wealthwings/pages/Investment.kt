@@ -47,7 +47,7 @@ import com.example.wealthwings.viewmodels.StockSearchViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Investment(navController: NavController, viewModel: StockHoldingViewModel, stockSearchViewModel: StockSearchViewModel) {
-    val stockHolding by viewModel.stockHolding.observeAsState(emptyList())
+    val stockHolding by viewModel.stockHoldingList.observeAsState(emptyList())
     val totalAmount by viewModel.totalAmount.observeAsState(0.0)
     var query by remember { mutableStateOf("") }
     val searchResults by stockSearchViewModel.searchResults.collectAsState()
@@ -94,57 +94,76 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                     }
                 )
             } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxWidth()
-                ) {
-                    Text(text = "Your Holdings", fontSize = 30.sp)
-                    Text("${totalAmount}", fontSize = 30.sp)
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(stockHolding, key = { it.id }) { holding ->
-                            val averagePrice = if (holding.quantity > 0) holding.totalPrice / holding.quantity else 0.0
-                            Column(
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    item {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxWidth()
+                        ) {
+                            Text(text = "Your Holdings", fontSize = 30.sp)
+                            Text("${totalAmount}", fontSize = 30.sp)
+
+                            var sortedList = stockHolding.sortedByDescending { it.totalPrice }
+                            var top4 = sortedList.take(4)
+                            var remainder = sortedList.drop(4)
+                            var remainderTotal = remainder.sumOf { it.totalPrice }
+
+                            val pieChartData = top4.associate { it.symbol to it.totalPrice }
+                                .plus("Rest Of Portfolio" to remainderTotal)
+
+                            PieChart(
+                                data = pieChartData
+                            )
+                        }
+                    }
+                    items(stockHolding, key = { it.symbol }) { holding ->
+                        val averagePrice =
+                            if (holding.quantity > 0) holding.totalPrice / holding.quantity else 0.0
+
+                        Column(
+                            Modifier
+                                .padding()
+                                .clip(Shapes.medium)
+                        ) {
+                            Row(
                                 Modifier
+                                    .fillMaxWidth()
                                     .padding()
-                                    .clip(Shapes.medium)
+                                    .background(BackgroundElevated),
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Row(
+                                Column(
                                     Modifier
-                                        .fillMaxWidth()
-                                        .padding()
-                                        .background(BackgroundElevated),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                        .padding(8.dp)
+                                        .fillMaxWidth(0.7f)
                                 ) {
-                                    Column(
-                                        Modifier
-                                            .padding(8.dp)
-                                            .fillMaxWidth(0.7f)
-                                    ) {
-                                        Text(text = "Name: ${holding.name}", fontSize = 16.sp)
-                                        Text(text = "Symbol: ${holding.symbol}", fontSize = 16.sp)
-                                    }
-                                    Column(
-                                        Modifier
-                                            .padding(8.dp)
-                                            .fillMaxWidth(),
-                                        horizontalAlignment = Alignment.End
-                                    ) {
-                                        Text(text = "Amount: ${holding.quantity}", fontSize = 16.sp)
-                                        Text(text = "Avg Price: ${"%.2f".format(averagePrice)}", fontSize = 16.sp)
-                                    }
+                                    Text(text = "Name: ${holding.name}", fontSize = 16.sp)
+                                    Text(text = "Symbol: ${holding.symbol}", fontSize = 16.sp)
                                 }
-                                Divider()
+                                Column(
+                                    Modifier
+                                        .padding(8.dp)
+                                        .fillMaxWidth(),
+                                    horizontalAlignment = Alignment.End
+                                ) {
+                                    Text(text = "Amount: ${holding.quantity}", fontSize = 16.sp)
+                                    Text(
+                                        text = "Avg Price: ${"%.2f".format(averagePrice)}",
+                                        fontSize = 16.sp
+                                    )
+                                }
                             }
+                            Divider()
                         }
                     }
                 }
             }
-        }
-    )
+        })
 }
+
 
 //
 //@RequiresApi(Build.VERSION_CODES.O)

@@ -14,6 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wealthwings.ui.theme.Background
+import android.os.Bundle
+import android.util.Log
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.example.wealthwings.R
+import com.example.wealthwings.components.LargeButton
+import com.example.wealthwings.ui.theme.SystemGray04
+import com.kwabenaberko.newsapilib.NewsApiClient
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +37,17 @@ fun Quiz(navController: NavController, name: String) {
                     containerColor = Background
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("quiz/news") },
+                shape = CircleShape,
+                containerColor = SystemGray04
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.addicon),
+                    contentDescription = "News")
+            }
         },
 
         content = { innerPadding ->
