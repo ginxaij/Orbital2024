@@ -1,7 +1,6 @@
 package com.example.wealthwings
 
 import com.google.gson.annotations.SerializedName
-import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,12 +11,8 @@ interface StockApi {
     @GET("query?function=OVERVIEW")
     suspend fun getCompanyOverview(@Query("symbol") symbol: String, @Query("apikey") apiKey: String = API_KEY): CompanyOverviewResponse
 
-    @GET("query?function=OVERVIEW")
-    suspend fun getCompanyOverviewRaw(@Query("symbol") symbol: String, @Query("apikey") apiKey: String = API_KEY): ResponseBody
-
-    @GET("query?function=TIME_SERIES_DAILY")
-    suspend fun getDailyPrices(@Query("symbol") symbol: String, @Query("apikey") apiKey: String = API_KEY): DailyTimeSeriesResponse
-
+    @GET("query?function=TIME_SERIES_INTRADAY&interval=5min&apikey=$API_KEY")
+    suspend fun getIntradayPrices(@Query("symbol") symbol: String): TimeSeriesResponse
 
     companion object {
         const val API_KEY = "3BX4UJWT19AEUR9O"
@@ -25,11 +20,10 @@ interface StockApi {
     }
 }
 
-data class DailyTimeSeriesResponse(
-    @SerializedName("Time Series (Daily)")
-    val timeSeries: Map<String, TimeSeriesEntry>?
+data class TimeSeriesResponse(
+    @SerializedName("Time Series (5min)")
+    val timeSeries: Map<String, TimeSeriesEntry>
 )
-
 
 data class TimeSeriesEntry(
     @SerializedName("1. open")
@@ -80,4 +74,3 @@ data class StockMatch(
     @SerializedName("2. name")
     val name: String
 )
-

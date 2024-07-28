@@ -1,6 +1,7 @@
 package com.example.wealthwings.pages
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -112,6 +113,7 @@ fun AddStockHolding(
                         onItemClick = { stock ->
                             selectedStock = stock
                             query = ""
+                            Log.d("AddStockHolding", "Selected Stock: ${stock.symbol}, ${stock.name}")
                         }
                     )
                 }
@@ -188,6 +190,7 @@ fun AddStockHolding(
                                     }
                                     launchSingleTop = true
                                 }
+                                Log.d("AddStockHolding", "Added Stock: ${stockHolding.symbol}, ${stockHolding.name}")
                             }
                         },
                         modifier = Modifier.padding(16.dp),

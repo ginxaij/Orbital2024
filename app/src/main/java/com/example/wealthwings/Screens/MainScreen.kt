@@ -40,6 +40,7 @@ import com.example.wealthwings.pages.NewsContent
 import com.example.wealthwings.pages.Profile
 import com.example.wealthwings.pages.Quiz
 import com.example.wealthwings.pages.QuizGamePage
+import com.example.wealthwings.pages.StockDetailScreen
 import com.example.wealthwings.pages.Transaction
 import com.example.wealthwings.ui.theme.BottomBar
 import com.example.wealthwings.viewmodels.CompanyFinancialsViewModel
@@ -183,6 +184,15 @@ fun MainScreen(navController2: NavHostController, expenseViewModel: ExpenseViewM
                 showBottomBar.value = true
                 val expenseId = backStackEntry.arguments?.getString("expenseId") ?: ""
                 ExpenseDetailScreen(navController, expenseId, expenseViewModel)
+            }
+
+            composable(
+                "stockDetails/{symbol}",
+                arguments = listOf(navArgument("symbol") { type = NavType.StringType })
+            ) { backStackEntry ->
+                showBottomBar.value = true
+                val symbol = backStackEntry.arguments?.getString("symbol") ?: ""
+                StockDetailScreen(navController, stockHoldingViewModel, symbol)
             }
             composable(
                 "companyDetails/{symbol}",

@@ -2,7 +2,7 @@ package com.example.wealthwings.pages
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,22 +32,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wealthwings.components.LargeButton
 import com.example.wealthwings.ui.theme.Background
-import com.example.wealthwings.ui.theme.BackgroundElevated
-import com.example.wealthwings.ui.theme.Shapes
 import com.example.wealthwings.viewmodels.StockHoldingViewModel
 import com.example.wealthwings.viewmodels.StockSearchViewModel
 
 //dostogadre@gufum.com
-//tavl65xr57@smykwb.com
-@OptIn(ExperimentalMaterial3Api::class)
+    //tavl65xr57@smykwb.com
 @RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Investment(navController: NavController, viewModel: StockHoldingViewModel, stockSearchViewModel: StockSearchViewModel) {
     val stockHolding by viewModel.stockHoldingList.observeAsState(emptyList())
@@ -114,10 +112,10 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                             Text(text = "Your Holdings", fontSize = 30.sp)
                             Text("${totalAmount}", fontSize = 30.sp)
 
-                            var sortedList = stockHolding.sortedByDescending { it.totalPrice }
-                            var top4 = sortedList.take(4)
-                            var remainder = sortedList.drop(4)
-                            var remainderTotal = remainder.sumOf { it.totalPrice }
+                            val sortedList = stockHolding.sortedByDescending { it.totalPrice }
+                            val top4 = sortedList.take(4)
+                            val remainder = sortedList.drop(4)
+                            val remainderTotal = remainder.sumOf { it.totalPrice }
 
                             val pieChartData = top4.associate { it.symbol to it.totalPrice }
                                 .plus("Rest Of Portfolio" to remainderTotal)
@@ -131,43 +129,46 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                         val averagePrice =
                             if (holding.quantity > 0) holding.totalPrice / holding.quantity else 0.0
 
-                        Column(
-                            Modifier
-                                .padding()
-                                .clip(Shapes.medium)
+                        Card(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("stockDetails/${holding.symbol}")
+                                },
+                            shape = RoundedCornerShape(16.dp),
                         ) {
-                            Row(
+                            Column(
                                 Modifier
+                                    .padding(16.dp)
                                     .fillMaxWidth()
-                                    .padding()
-                                    .background(BackgroundElevated),
-                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Column(
+                                Row(
                                     Modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(0.7f)
-                                ) {
-                                    Text(text = "Name: ${holding.name}", fontSize = 16.sp)
-                                    Text(text = "Symbol: ${holding.symbol}", fontSize = 16.sp)
-                                }
-                                Column(
-                                    Modifier
-                                        .padding(8.dp)
                                         .fillMaxWidth(),
-                                    horizontalAlignment = Alignment.End
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(text = "Amount: ${holding.quantity}", fontSize = 16.sp)
-                                    Text(
-                                        text = "Avg Price: ${"%.2f".format(averagePrice)}",
-                                        fontSize = 16.sp
-                                    )
+                                    Column(
+                                        Modifier.fillMaxWidth(0.6f)
+                                    ) {
+                                        Text(text = holding.name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = holding.symbol, fontSize = 16.sp, color = Color.Gray)
+                                    }
+                                    Column(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.End
+                                    ) {
+                                        Text(text = "$${"%.2f".format(averagePrice)}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = "Quantity: ${holding.quantity}", fontSize = 16.sp, color = Color.Gray)
+                                    }
                                 }
                             }
-                            Divider()
                         }
                     }
                 }
             }
-        })
+        }
+    )
 }
+
+
