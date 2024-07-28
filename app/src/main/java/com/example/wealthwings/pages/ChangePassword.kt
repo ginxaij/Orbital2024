@@ -153,8 +153,8 @@ fun ChangePassword(navController: NavController) {
                             if (password.isNotBlank() && newPassword.isNotBlank() && newPassword2.isNotBlank()) {
                                 if (newPassword == newPassword2) { // use log to check
                                     UserService.changeUserPassword(
-                                        password,
-                                        newPassword
+                                        currentPassword = password,
+                                        newPassword = newPassword
                                     ) { success, message ->
                                         if (success) {
                                             //errorMessage = message
