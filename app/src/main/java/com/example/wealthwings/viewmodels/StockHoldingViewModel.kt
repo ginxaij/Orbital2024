@@ -6,9 +6,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.wealthwings.db.FirebaseDB
 import com.example.wealthwings.model.StockHolding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 class StockHoldingViewModel(application: Application) : AndroidViewModel(application) {
     private var currentUserUid: String? = null
 
-    var stockHoldingList: LiveData<List<StockHolding>> = FirebaseDB().readHoldings(currentUserUid.toString())
+    var stockHoldingList: LiveData<List<StockHolding>> = MutableLiveData()
     private val _totalAmount = MediatorLiveData<Double>().apply {
         addSource(stockHoldingList) { stock ->
             value = stock.sumOf { it.totalPrice }
@@ -24,6 +26,13 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
     }
 
     val totalAmount: LiveData<Double> get() = _totalAmount
+
+    init {
+        currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        currentUserUid?.let { uid ->
+            stockHoldingList = FirebaseDB().readHoldings(uid)
+        }
+    }
 
     fun setCurrentUser(input: String?) {
         currentUserUid = input
@@ -37,19 +46,25 @@ class StockHoldingViewModel(application: Application) : AndroidViewModel(applica
 
     fun addHolding(newStockHolding: StockHolding) {
         viewModelScope.launch(Dispatchers.IO) {
-            FirebaseDB().writeHolding(currentUserUid.toString(), newStockHolding)
+            currentUserUid?.let { uid ->
+                FirebaseDB().writeHolding(uid, newStockHolding)
+            }
         }
     }
 
     fun deleteHolding(symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            FirebaseDB().removeHolding(currentUserUid.toString(), symbol)
+            currentUserUid?.let { uid ->
+                FirebaseDB().removeHolding(uid, symbol)
+            }
         }
     }
 
     fun deleteAllHoldings() {
         viewModelScope.launch(Dispatchers.IO) {
-            FirebaseDB().removeAllHoldings()
+            currentUserUid?.let { uid ->
+                FirebaseDB().removeAllHoldings()
+            }
         }
     }
 }

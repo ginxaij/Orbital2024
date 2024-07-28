@@ -251,10 +251,12 @@ class FirebaseDB {
         }
     }
 
-    fun removeHolding(userUid: String, symbol: String) {
-        val dbRef = FirebaseDatabase.getInstance().getReference("users/$userUid/holdings")
-        dbRef.child(symbol).removeValue()
+    fun removeHolding(uid: String, symbol: String) {
+        val cleanedSymbol = symbol.replace(".", "")
+        val stockHoldingRef = usersReference.child(uid).child("stockHoldings").child(cleanedSymbol)
+        stockHoldingRef.removeValue()
     }
+
 
     fun removeAllHoldings() {
         val stockHoldingRef = usersReference.child(FirebaseAuth.getInstance().currentUser!!.uid)
