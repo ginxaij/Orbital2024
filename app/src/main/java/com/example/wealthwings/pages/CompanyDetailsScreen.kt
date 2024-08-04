@@ -1,6 +1,7 @@
 package com.example.wealthwings.pages
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.wealthwings.CompanyOverviewResponse
@@ -30,7 +33,12 @@ fun CompanyDetailsScreen(navController: NavController, viewModel: CompanyFinanci
     }
 
     if (isLoading) {
-        CircularProgressIndicator()
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(modifier = Modifier.scale(3f))
+        }
     } else {
         companyOverview?.let { overview ->
             Log.d("CompanyDetailsScreen", "Displaying company overview: $overview")
@@ -44,9 +52,9 @@ fun CompanyDetailsScreen(navController: NavController, viewModel: CompanyFinanci
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Sector: ${overview.sector ?: "N/A"}")
                 Text(text = "Industry: ${overview.industry ?: "N/A"}")
-                Text(text = "Market Cap: ${overview.marketCapitalization ?: "N/A"}")
+                Text(text = "Market Cap: $${overview.marketCapitalization ?: "N/A"}")
                 Text(text = "PE Ratio: ${overview.peRatio ?: "N/A"}")
-                Text(text = "Latest Price: ${latestPrice ?: "N/A"}")
+                Text(text = "Latest Price: $${latestPrice ?: "N/A"}")
             }
         } ?: run {
             Text("No data available")

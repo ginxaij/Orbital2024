@@ -242,7 +242,6 @@ class FirebaseRepositoryTest {
         every { snapshot.getValue(StockHolding::class.java) } returns existingStock
 
         // Mock DatabaseReference behavior
-        val stockHoldingRef = mockk<DatabaseReference>(relaxed = true)
         every {
             usersReference.child(uid).child("stockHoldings").child("AAPL").get()
         } returns Tasks.forResult(snapshot)

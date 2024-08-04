@@ -6,16 +6,21 @@ import retrofit2.http.Query
 
 interface StockApi {
     @GET("query?function=SYMBOL_SEARCH")
-    suspend fun searchStocks(@Query("keywords") keywords: String, @Query("apikey") apiKey: String = API_KEY): StockSearchResponse
+    suspend fun searchStocks(
+        @Query("keywords") keywords: String,
+        @Query("apikey") apiKey: String = API_KEY
+    ): StockSearchResponse
 
-    @GET("query?function=OVERVIEW")
-    suspend fun getCompanyOverview(@Query("symbol") symbol: String, @Query("apikey") apiKey: String = API_KEY): CompanyOverviewResponse
+    @GET("query?function=OVERVIEW&apikey=$API_KEY")
+    suspend fun getCompanyOverview(
+        @Query("symbol") symbol: String,
+    ): CompanyOverviewResponse
 
     @GET("query?function=TIME_SERIES_INTRADAY&interval=5min&apikey=$API_KEY")
     suspend fun getIntradayPrices(@Query("symbol") symbol: String): TimeSeriesResponse
 
     companion object {
-        const val API_KEY = "3BX4UJWT19AEUR9O"
+        const val API_KEY = "3BX4UJWT19AEUR9O" // "VMQS9W0UD0UQ82XF"
         const val BASE_URL = "https://www.alphavantage.co/"
     }
 }
@@ -37,6 +42,7 @@ data class TimeSeriesEntry(
     @SerializedName("5. volume")
     val volume: String
 )
+
 
 data class CompanyOverviewResponse(
     @SerializedName("Symbol") val symbol: String?,

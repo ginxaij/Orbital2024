@@ -96,7 +96,8 @@ fun Investment(navController: NavController, viewModel: StockHoldingViewModel, s
                     searchResults = searchResults,
                     isLoading = isLoading,
                     onItemClick = { symbol ->
-                        navController.navigate("companyDetails/$symbol")
+                        val stockSymbol = symbol.symbol
+                        navController.navigate("companyDetails/$stockSymbol")
                     }
                 )
             } else {

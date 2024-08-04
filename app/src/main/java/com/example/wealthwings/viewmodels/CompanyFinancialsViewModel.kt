@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wealthwings.CompanyOverviewResponse
 import com.example.wealthwings.StockApi
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +30,9 @@ class CompanyFinancialsViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = api.getCompanyOverview(symbol)
+                Log.i("Info", "start fetch")
+                val response = api.getCompanyOverview(symbol = symbol)
+                Log.i("response", response.toString())
                 _companyOverview.value = response
                 fetchLatestPrice(symbol)
             } catch (e: Exception) {
@@ -37,6 +40,7 @@ class CompanyFinancialsViewModel @Inject constructor(
                 Log.e("CompanyFinancialsVM", "Error fetching company overview", e)
             } finally {
                 _isLoading.value = false
+                Log.e("CompanyFinancialsVM", "Finish Fetching Company Overview")
             }
         }
     }
@@ -44,8 +48,13 @@ class CompanyFinancialsViewModel @Inject constructor(
     private suspend fun fetchLatestPrice(symbol: String) {
         try {
             val response = api.getIntradayPrices(symbol)
-            val latestEntry = response.timeSeries.values.firstOrNull()
-            _latestPrice.value = latestEntry?.close
+            val timeSeries = response.timeSeries
+            if (timeSeries != null) {
+                val latestEntry = timeSeries.values.firstOrNull()
+                _latestPrice.value = latestEntry?.close
+            } else {
+                _latestPrice.value = null
+            }
         } catch (e: Exception) {
             _latestPrice.value = null
             Log.e("CompanyFinancialsVM", "Error fetching latest price", e)

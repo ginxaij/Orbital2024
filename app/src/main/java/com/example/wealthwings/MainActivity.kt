@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 val stockSearchViewModel: StockSearchViewModel = hiltViewModel()
                 val companyFinancialsViewModel: CompanyFinancialsViewModel = hiltViewModel()
                 val newsViewModel: NewsViewModel = hiltViewModel()
+
                 val authListener = FirebaseAuth.AuthStateListener { auth ->
                     val currentUser = auth.currentUser
                     if (currentUser != null) {
