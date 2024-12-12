@@ -20,7 +20,7 @@ interface StockApi {
     suspend fun getIntradayPrices(@Query("symbol") symbol: String): TimeSeriesResponse
 
     companion object {
-        const val API_KEY = "3BX4UJWT19AEUR9O" // "VMQS9W0UD0UQ82XF"
+        const val API_KEY = "" 
         const val BASE_URL = "https://www.alphavantage.co/"
     }
 }
