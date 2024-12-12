@@ -10,7 +10,7 @@ import com.kwabenaberko.newsapilib.models.response.ArticleResponse
 
 
 class NewsViewModel(application: Application) : AndroidViewModel(application) {
-    val apiKey = "25a7e83717684cb78c39ab34930930fe"
+    val apiKey = ""
     val category = "business"
     val newsApiClient = NewsApiClient(apiKey)
     var articles: MutableLiveData<List<Article>> = MutableLiveData(emptyList<Article>())
